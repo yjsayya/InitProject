@@ -1,0 +1,31 @@
+0. gitignore 파일 설정
+    ㄴ macOS / Windows
+    ㄴ intellij+all / Eclipse / VisualStudioCode
+    ㄴ Java / Gradle / Maven
+    ㄴ NetBeans
+1. logback-spring.xml 파일 설정
+2. application.yml 파일 설정(local, dev, prod)
+3. run.sh 파일
+4. (v) MyBatis 설정
+5. (v) Spring Security 설정
+6. Response 및 GlobalErrorHandling 설정
+7. Properties값(yml 파일 읽기)
+    ㄴ application.yml파일
+    ㄴ (v) 외부 yml 파일
+8. (v) RestTemplate 설정
+
+CREATE TABLE TB_USER_ACCOUNT
+(
+    `USER_ID`    BIGINT AUTO_INCREMENT,
+    `EMAIL`      VARCHAR(100) NOT NULL,
+    `PASSWORD`   VARCHAR(200) NOT NULL,
+    `USERNAME`   VARCHAR(40)  NOT NULL,
+    `USER_ROLE`  VARCHAR(2)   NOT NULL DEFAULT '00',
+    `DEL_YN`     CHAR(1)      NOT NULL DEFAULT 'N',
+    `REG_DT`     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `UPT_DT`     TIMESTAMP    NULL     DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(),
+    PRIMARY KEY (`USER_ID`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci
+;
