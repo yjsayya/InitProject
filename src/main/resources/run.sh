@@ -32,7 +32,7 @@ start() {
     exit 1
   fi
   echo "Starting $SERVICE_NAME..."
-  nohup $JAVA_HOME/bin/java $JAVA_OPTS -jar $APPLICATION > /dev/null 2>&1 &
+  nohup $JAVA_CMD > /dev/null 2>&1 &
   echo $! > "$PID_FILE"
   echo "$SERVICE_NAME started with PID $(cat $PID_FILE)."
 }
