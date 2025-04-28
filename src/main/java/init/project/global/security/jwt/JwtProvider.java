@@ -1,4 +1,4 @@
-package init.project.global.security.util;
+package init.project.global.security.jwt;
 
 import init.project.global.security.model.UserDetailsImpl;
 import io.jsonwebtoken.*;
@@ -12,33 +12,32 @@ import java.util.Date;
 
 @Slf4j
 @Component
-public class JwtUtil {
+public class JwtProvider {
 
     private static final String atSecretKey = "awbefzl;xczl;xckvjl;awzkejfkvjl;awzkejfalw;ef;alwefawefyour-access-token-secret-32char+";
     private static final String rfSecretKey = "awbefzl;xczl;xckvjl;awzkejfkvjl;awzkejfalw;ef;alwefawefyour-access-token-secret-32char+";
-    private static final long atExpiredTimeMs = 1000 * 60 * 5; // 5분
-    private static final long rfExpiredTimeMs = 1000L * 60 * 60 * 24 * 14; // 14일
+    private static final long atExpiredTimeMs = 1000 * 60 * 5; // 30분
+    private static final long rfExpiredTimeMs = 1000L * 60 * 60 * 24 * 7; // 7일
 
-    public String generateAccessToken(UserDetailsImpl userDetails) {
+    public String generateAccessToken(Long userId, String userRole) {
         Date now = new Date();
         Date expiredDate = new Date(now.getTime() + atExpiredTimeMs);
 
         return Jwts.builder()
-                .setSubject(String.valueOf(userDetails.getUserId()))
-                .claim("userLv", userDetails.getUserRole())
+                .setSubject(String.valueOf(userId))
+                .claim("userRole", userRole)
                 .setIssuedAt(now)
                 .setExpiration(expiredDate)
                 .signWith(getSigningKey(atSecretKey), SignatureAlgorithm.HS512)
                 .compact();
     }
 
-    public String generateRefreshToken(UserDetailsImpl userDetails) {
+    public String generateRefreshToken(Long userId) {
         Date now = new Date();
         Date expiredDate = new Date(now.getTime() + rfExpiredTimeMs);
 
         return Jwts.builder()
-                .setSubject(String.valueOf(userDetails.getUserId()))
-                .claim("userLv", userDetails.getUserRole())
+                .setSubject(String.valueOf(userId))
                 .setIssuedAt(now)
                 .setExpiration(expiredDate)
                 .signWith(getSigningKey(rfSecretKey), SignatureAlgorithm.HS512)

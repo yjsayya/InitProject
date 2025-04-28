@@ -1,6 +1,6 @@
 package init.project.global.security.authorization;
 
-import init.project.global.security.util.JwtUtil;
+import init.project.global.security.jwt.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+    private final JwtProvider jwtProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -34,13 +34,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         log.info("accessToken: {}", accessToken);
         // 2. token의 유효성 검사
-        if (!jwtUtil.checkJwtValidation(accessToken, true)) {
+        if (!jwtProvider.checkJwtValidation(accessToken, true)) {
             filterChain.doFilter(request, response);
             return;
         }
         // 3. token에서 정보 조회
-        Long userId = Long.parseLong(jwtUtil.getUserIdFromJwt(accessToken, true));
-        String userRole = jwtUtil.getUserRoleFromJwt(accessToken, true);
+        Long userId = Long.parseLong(jwtProvider.getUserIdFromJwt(accessToken, true));
+        String userRole = jwtProvider.getUserRoleFromJwt(accessToken, true);
 
         log.info("userId: {}, userRole: {}", userId, userRole);
 

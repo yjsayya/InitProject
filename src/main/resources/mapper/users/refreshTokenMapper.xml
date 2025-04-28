@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="init.project.global.security.jwt.JwtRefreshTokenRepository">
+
+    <select id="findByUserId" resultType="init.project.global.security.jwt.JwtRefreshToken">
+        SELECT USER_ID,
+               REFRESH_TOKEN,
+               DEL_YN,
+               CREATED_AT,
+               UPDATED_AT
+        FROM JWT_REFRESH_TOKEN
+        WHERE DEL_YN = 'N'
+          AND USER_ID = #{userId}
+    </select>
+
+    <insert id="saveRefreshToken">
+        INSERT INTO JWT_REFRESH_TOKEN
+            ( USER_ID, REFRESH_TOKEN )
+        VALUES
+            ( #{userId}, #{refreshToken} )
+    </insert>
+
+    <update id="updateRefreshToken">
+        UPDATE JWT_REFRESH_TOKEN
+        SET REFRESH_TOKEN = #{refreshToken},
+            DEL_YN = 'N'
+        WHERE USER_ID = #{userId}
+    </update>
+
+
+
+</mapper>
