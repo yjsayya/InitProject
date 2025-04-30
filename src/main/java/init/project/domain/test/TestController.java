@@ -1,8 +1,7 @@
 package init.project.domain.test;
 
+import init.project.global.security.jwt.JwtProperty;
 import init.project.global.properties.UsersProperty;
-import init.project.global.response.errorHandler.CustomException;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -13,10 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.util.retry.Retry;
 
-import java.time.Duration;
-import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -25,6 +22,7 @@ import java.util.HashMap;
 public class TestController {
 
     private final UsersProperty usersProperty;
+    private final JwtProperty jwtProperty;
     private final WebClient webClient;
 
     @PostMapping
@@ -33,7 +31,7 @@ public class TestController {
         log.info("age: {}", usersProperty.getInfo().getAge());
         log.info("processName: {}", usersProperty.getProcessName());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(Map.of("code", "200", "message", "success"));
     }
 
     @GetMapping
@@ -55,7 +53,17 @@ public class TestController {
 
         log.info("response: {}", response);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(Map.of("code", "200", "message", "success"));
+    }
+
+    @GetMapping("/yml")
+    public ResponseEntity<?> yamlTest() {
+        log.info("accessToken: {}", jwtProperty.getAccessToken().getSecretKey());
+        log.info("accessToken: {}", jwtProperty.getAccessToken().getExpiredTimeMs());
+        log.info("refreshToken: {}", jwtProperty.getRefreshToken().getSecretKey());
+        log.info("refreshToken: {}", jwtProperty.getRefreshToken().getExpiredTimeMs());
+
+        return ResponseEntity.ok().body(Map.of("code", "200", "message", "success"));
     }
 
 }

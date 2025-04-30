@@ -34,7 +34,7 @@ public class SecurityConfig {
 
     private final String[] PERMIT_URL = {
             "/api/login",
-            "/api/test",
+            "/api/test/**",
     };
 
     private final String[] ADMIN_URL = {
