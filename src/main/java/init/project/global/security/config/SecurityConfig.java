@@ -3,7 +3,8 @@ package init.project.global.security.config;
 import init.project.global.security.authorization.AccessDeniedHandlerImpl;
 import init.project.global.security.authorization.AuthenticationEntryPointImpl;
 import init.project.global.security.authorization.JwtAuthenticationFilter;
-import jakarta.servlet.http.HttpServletResponse;
+import init.project.global.security.logout.LogoutHandlerImpl;
+import init.project.global.security.logout.LogoutSuccessHandlerImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -61,17 +64,16 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            response.setStatus(HttpServletResponse.SC_OK);
-                            response.getWriter().write("{\"message\": \"Logged out\"}");
-                        })
+                        .addLogoutHandler(logoutHandler())
+                        .logoutSuccessHandler(logoutSuccessHandler())
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+    @Bean public LogoutHandler logoutHandler() { return new LogoutHandlerImpl(); }
+    @Bean public LogoutSuccessHandler logoutSuccessHandler() { return new LogoutSuccessHandlerImpl(); }
+    @Bean public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

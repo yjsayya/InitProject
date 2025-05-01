@@ -25,7 +25,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("JwtAuthenticationFilter start");
         // 1. header에서 accessToken 조회하기
         String accessToken = getTokenFromHeader(request);
         if (accessToken == null) {
