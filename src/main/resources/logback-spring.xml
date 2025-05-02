@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <property name="LOGFILE_NAME" value="init-project" />
-    <property name="LOGFILE_DIR" value="./logs" />
-    <property name="LOCAL_LOGFILE_DIR" value="./logs" />
+    <property name="LOGFILE_DIR_LOCAL" value="./logs" />
+    <property name="LOGFILE_DIR_DEV" value="./logs" />
+    <property name="LOGFILE_DIR_PROD" value="./logs" />
     <!-- CONSOLE -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -13,9 +14,9 @@
     <!-- 1. local -->
     <springProfile name="local">
         <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOCAL_LOGFILE_DIR}/${LOGFILE_NAME}.log</file>
+            <file>${LOGFILE_DIR_LOCAL}/${LOGFILE_NAME}.log</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>${LOCAL_LOGFILE_DIR}/${LOGFILE_NAME}_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>${LOGFILE_DIR_LOCAL}/${LOGFILE_NAME}_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>100MB</maxFileSize>
                 <maxHistory>10</maxHistory>
                 <totalSizeCap>2GB</totalSizeCap>
@@ -29,9 +30,9 @@
     <!-- 2. dev -->
     <springProfile name="dev">
         <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOGFILE_DIR}/${LOGFILE_NAME}.log</file>
+            <file>${LOGFILE_DIR_DEV}/${LOGFILE_NAME}.log</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>${LOGFILE_DIR}/${LOGFILE_NAME}_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>${LOGFILE_DIR_DEV}/${LOGFILE_NAME}_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>100MB</maxFileSize>
                 <maxHistory>90</maxHistory>
                 <totalSizeCap>4GB</totalSizeCap>
@@ -45,9 +46,9 @@
     <!-- 3. prod -->
     <springProfile name="prod">
         <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOGFILE_DIR}/${LOGFILE_NAME}.log</file>
+            <file>${LOGFILE_DIR_PROD}/${LOGFILE_NAME}.log</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>${LOGFILE_DIR}/${LOGFILE_NAME}_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>${LOGFILE_DIR_PROD}/${LOGFILE_NAME}_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <maxFileSize>100MB</maxFileSize>
                 <maxHistory>90</maxHistory>
                 <totalSizeCap>4GB</totalSizeCap>
