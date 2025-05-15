@@ -55,5 +55,7 @@ tasks.named('test') {
 }
 
 bootJar {
-    archiveBaseName.set('init-project')
+    archiveBaseName.set('init-project') // JAR 이름의 기본 이름
+    archiveVersion.set('')              // 버전 붙이지 않도록
+    archiveClassifier.set('')           // classifier 제거
 }
