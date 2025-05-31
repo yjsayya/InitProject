@@ -9,13 +9,13 @@ public class JsonUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private JsonUtil() { }
+    private JsonUtil() {}
 
     public static ObjectMapper getInstance() {
         return objectMapper;
     }
 
-    public static Map<String, String> toMap(String json) {
+    public static Map<String, Object> toMap(String json) {
         try {
             return objectMapper.readValue(json, Map.class);
         } catch (JsonProcessingException e) {
@@ -28,6 +28,14 @@ public class JsonUtil {
             return objectMapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to convert Object to JSON", e);
+        }
+    }
+
+    public static <T> T fromJson(String json, Class<T> clazz) {
+        try {
+            return objectMapper.readValue(json, clazz);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to convert JSON to Object", e);
         }
     }
 
