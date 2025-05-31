@@ -77,6 +77,7 @@
     <!-- Prod -->
     <springProfile name="prod">
         <root level="INFO">
+            <appender-ref ref="CONSOLE" />
             <appender-ref ref="dailyRollingFileAppender" />
         </root>
     </springProfile>
