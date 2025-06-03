@@ -8,7 +8,7 @@
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
       <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level - [%thread] %logger{35} : %msg%n</pattern>
-      <charset>utf8</charset>
+      <charset>UTF-8</charset>
     </encoder>
   </appender>
   <!-- 1. local -->
@@ -22,7 +22,7 @@
       </rollingPolicy>
       <encoder>
         <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level - [%thread] %logger{35} : %msg%n</pattern>
-        <charset>utf8</charset>
+        <charset>UTF-8</charset>
       </encoder>
     </appender>
   </springProfile>
@@ -38,7 +38,7 @@
       </rollingPolicy>
       <encoder>
         <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level - [%thread] %logger{35} : %msg%n</pattern>
-        <charset>utf8</charset>
+        <charset>UTF-8</charset>
       </encoder>
     </appender>
   </springProfile>
@@ -54,7 +54,7 @@
       </rollingPolicy>
       <encoder>
         <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level - [%thread] %logger{35} : %msg%n</pattern>
-        <charset>utf8</charset>
+        <charset>UTF-8</charset>
       </encoder>
     </appender>
   </springProfile>
@@ -76,6 +76,7 @@
   <!-- Prod -->
   <springProfile name="prod">
     <root level="INFO">
+      <appender-ref ref="CONSOLE" />
       <appender-ref ref="dailyRollingFileAppender" />
     </root>
   </springProfile>
