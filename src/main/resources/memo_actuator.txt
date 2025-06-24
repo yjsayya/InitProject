@@ -1,0 +1,6 @@
+# actuator 설정을 완료하면 아래 url에 올바르게 접속이 되는지 브라우저에서 확인
+http://localhost:38008/845xxx40e75e132weff90d5de7cdcd604f01f4ed/actuator
+
+# SpringSecurity에 꼭 "/845xxx40e75e132weff90d5de7cdcd604f01f4ed/actuator/**"를 permitAll로 해야함
+# 앞에 붙은 난수는 보안을 위해서 심어 놓은 값이라고 생각하면 된다.
+

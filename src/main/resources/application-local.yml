@@ -5,7 +5,13 @@ spring:
     password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
 
+
+#####################################################################################
+### Properties ######################################################################
+#####################################################################################
+baseUrl: /Users/sayya/Desktop/upload/init
 users:
+  save-url: ${baseUrl}/upload
   process-name: USER-ACCOUNT
   info:
     name: sayya

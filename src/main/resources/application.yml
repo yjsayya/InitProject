@@ -1,7 +1,29 @@
 server:
-  port: 8008
+  port: 38008
 spring:
   profiles:
     active: local
   main:
     banner-mode: log
+
+
+#####################################################################################
+### Actuator ########################################################################
+#####################################################################################
+management:
+  server:
+    port: {port.number} # Actuator 엔드포인트 접근 시 사용하는 서버 포트 지정
+  endpoints:
+    web:
+      base-path: "/845xxx40e75e132weff90d5de7cdcd604f01f4ed/actuator"
+      exposure:
+        include: "*" # prometheus, health, metrics  # 노출하고자 하는 Actuator 엔드포인트
+      enabled-by-default: true
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true  # Prometheus 연동 시 필요
