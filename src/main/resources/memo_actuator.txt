@@ -4,3 +4,6 @@ http://localhost:38008/845xxx40e75e132weff90d5de7cdcd604f01f4ed/actuator
 # SpringSecurity에 꼭 "/845xxx40e75e132weff90d5de7cdcd604f01f4ed/actuator/**"를 permitAll로 해야함
 # 앞에 붙은 난수는 보안을 위해서 심어 놓은 값이라고 생각하면 된다.
 
+## 이제 prometheus를 어떻게 연결해야하는가?
+http://localhost:38008/845xxx40e75e132weff90d5de7cdcd604f01f4ed/actuator/prometheus
+모두 docker로 연결을 해놨다
