@@ -25,9 +25,9 @@ public class AsyncConfig {
     }
 
     // Java 21 Virtual Thread 기반 Executor
-    @Bean(name = "virtualExecutor")
-    public Executor virtualExecutor() {
-        return Executors.newVirtualThreadPerTaskExecutor();
-    }
+//    @Bean(name = "virtualExecutor")
+//    public Executor virtualExecutor() {
+//        return Executors.newVirtualThreadPerTaskExecutor();
+//    }
 
 }

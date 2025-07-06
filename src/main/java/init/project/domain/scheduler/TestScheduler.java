@@ -23,7 +23,7 @@ public class TestScheduler {
     @Scheduled(fixedRate = 5_000)
     public void scheduleJob() {
         try {
-            // TODO: 여기에 scheduling 작업 적으면 됨
+            log.info("SCHEDULING...");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
