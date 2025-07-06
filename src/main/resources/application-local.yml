@@ -5,7 +5,12 @@ spring:
     password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
 
+########################################################
+### Property ###########################################
+########################################################
+base-url: /app/wow
 users:
+  save-url: ${base}/upload
   process-name: USER-ACCOUNT
   info:
     name: sayya
