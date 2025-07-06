@@ -2,6 +2,7 @@
 # openssl rand -base64 64
 # 30분 = 1,800,000 = 30 * 60 * 1000
 # 3일 = 259,200,000 = 3 * 24 * 60 * 60 * 1000
+### .gitignore에 꼭 추가할 것!
 jwt:
   accessToken:
     secret-key: LWggo22hDO9vDDrlxW50r9k50P5aq940Ps8AsqLqw+xZYpmPOHGbG3ejqySJnya15qCFefw/aPi8LK65XP5Yfg==
