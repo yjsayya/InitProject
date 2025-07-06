@@ -20,7 +20,7 @@ management:
     web:
       base-path: "/84540e75e1f132b1fe590d5de7cdcd604f01f4ed/actuator"  # Actuator 엔드포인트 기본 경로 지정
       exposure:
-        include: prometheus, health, metrics  # 노출하고자 하는 Actuator 엔드포인트
+        include: "*" # prometheus, health, metrics  # 노출하고자 하는 Actuator 엔드포인트
     enabled-by-default: true
   endpoint: # 엔드포인트별 개별 설정 지정
     health:
