@@ -10,7 +10,7 @@ spring:
 ########################################################
 base-url: /app/wow
 users:
-  save-url: ${base}/upload
+  save-url: ${base-url}/upload
   process-name: USER-ACCOUNT
   info:
     name: sayya
