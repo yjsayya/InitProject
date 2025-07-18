@@ -2,7 +2,6 @@ package init.project.global.security.authentication;
 
 import init.project.domain.users.model.UserAccount;
 import init.project.domain.users.repository.UserAccountRepository;
-import init.project.global.security.model.LoginDTO;
 import init.project.global.security.model.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

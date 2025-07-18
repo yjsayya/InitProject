@@ -37,6 +37,7 @@ public class SecurityConfig {
 
     private final String[] PERMIT_URL = {
             "/api/login",
+            "/api/user/join",
             "/api/test/**",
             "/845xxx40e75e132weff90d5de7cdcd604f01f4ed/actuator/**",
             "/favicon.ico"

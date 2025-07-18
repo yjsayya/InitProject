@@ -23,4 +23,11 @@
           AND DEL_YN = 'N'
     </select>
 
+    <insert id="save">
+        INSERT INTO TB_USER_ACCOUNT
+            ( EMAIL, PASSWORD, USERNAME )
+        VALUES
+            ( #{userAccount.email}, #{userAccount.password}, #{userAccount.username} )
+    </insert>
+
 </mapper>

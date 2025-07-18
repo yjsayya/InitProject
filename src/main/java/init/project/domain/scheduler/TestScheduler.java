@@ -20,7 +20,7 @@ public class TestScheduler {
         log.info("DESTROY...");
     }
 
-    @Scheduled(fixedRate = 5_000)
+//    @Scheduled(fixedRate = 5_000)
     public void scheduleJob() {
         try {
             log.info("SCHEDULING...");

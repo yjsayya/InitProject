@@ -14,4 +14,6 @@ public interface UserAccountRepository {
     Optional<UserAccount> findById(@Param("userId") Long userId);
     Optional<UserAccount> findByEmail(@Param("email") String email);
 
+    Integer save(@Param("userAccount") UserAccount userAccount);
+
 }
