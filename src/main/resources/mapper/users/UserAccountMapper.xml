@@ -2,17 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="init.project.domain.users.repository.UserAccountRepository">
 
-    <select id="findById" resultType="init.project.domain.users.model.UserAccount">
+    <resultMap id="userAccountMap" type="init.project.domain.users.model.UserAccount">
+        <result property="userId"       column="USER_ID" />
+        <result property="email"        column="EMAIL" />
+        <result property="password"     column="PASSWORD" />
+        <result property="username"     column="USERNAME" />
+        <result property="userRole"     column="USER_ROLE" />
+        <result property="delYn"        column="DEL_YN" />
+        <result property="regDt"        column="REG_DT" />
+        <result property="uptDt"        column="UPT_DT" />
+    </resultMap>
+
+    <select id="findById" resultMap="userAccountMap">
         SELECT USER_ID,
                EMAIL,
                PASSWORD,
-               USER_ROLE
+               USERNAME,
+               USER_ROLE,
+               REG_DT
         FROM TB_USER_ACCOUNT
         WHERE USER_ID = #{userId}
           AND DEL_YN = 'N'
     </select>
 
-    <select id="findByEmail" resultType="init.project.domain.users.model.UserAccount">
+    <select id="findByEmail" resultMap="userAccountMap">
         SELECT USER_ID,
                EMAIL,
                PASSWORD,

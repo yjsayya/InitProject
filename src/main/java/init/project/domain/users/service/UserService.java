@@ -2,6 +2,7 @@ package init.project.domain.users.service;
 
 import init.project.domain.users.model.UserAccount;
 import init.project.domain.users.model.request.UserJoinRQ;
+import init.project.domain.users.model.response.UserAccountDetailRS;
 import init.project.domain.users.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,14 @@ public class UserService {
 
         int updatedCnt = userAccountRepository.save(userAccount);
         if (updatedCnt < 1) { throw new IllegalArgumentException("회원가입실패"); }
+    }
+
+    @Transactional(readOnly = true)
+    public UserAccountDetailRS fetchUserAccountDetail(Long userId) {
+        UserAccount userAccount = userAccountRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계정입니다."));
+
+        return UserAccountDetailRS.from(userAccount);
     }
 
 }

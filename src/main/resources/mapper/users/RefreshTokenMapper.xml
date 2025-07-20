@@ -2,12 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="init.project.global.security.jwt.JwtRefreshTokenRepository">
 
-    <select id="findByUserId" resultType="init.project.global.security.jwt.JwtRefreshToken">
-        SELECT USER_ID,
-               REFRESH_TOKEN,
-               DEL_YN,
-               CREATED_AT,
-               UPDATED_AT
+    <resultMap id="jwtRefreshTokenMap" type="init.project.global.security.jwt.JwtRefreshToken">
+        <result property="userId"       column="USER_ID" />
+        <result property="refreshToken" column="REFRESH_TOKEN" />
+        <result property="delYn"        column="DEL_YN" />
+        <result property="regDt"        column="REG_DT" />
+        <result property="uptDt"        column="UPT_DT" />
+    </resultMap>
+
+    <select id="findByUserId" resultMap="jwtRefreshTokenMap">
+        SELECT USER_ID
+              ,REFRESH_TOKEN
         FROM JWT_REFRESH_TOKEN
         WHERE DEL_YN = 'N'
           AND USER_ID = #{userId}
@@ -17,14 +22,14 @@
         INSERT INTO JWT_REFRESH_TOKEN
             ( USER_ID, REFRESH_TOKEN )
         VALUES
-            ( #{userId}, #{refreshToken} )
+            ( #{jwtRefreshToken.userId}, #{jwtRefreshToken.refreshToken} )
     </insert>
 
     <update id="updateRefreshToken">
         UPDATE JWT_REFRESH_TOKEN
-        SET REFRESH_TOKEN = #{refreshToken},
+        SET REFRESH_TOKEN = #{jwtRefreshToken.refreshToken},
             DEL_YN = 'N'
-        WHERE USER_ID = #{userId}
+        WHERE USER_ID = #{jwtRefreshToken.userId}
     </update>
 
 </mapper>

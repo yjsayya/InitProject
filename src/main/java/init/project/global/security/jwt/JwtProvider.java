@@ -78,11 +78,9 @@ public class JwtProvider {
     }
 
     public String getUserRoleFromJwt(String token, boolean isAccessToken) {
-        String atSecretKey = jwtProperty.getAccessToken().getSecretKey();
-        String rtSecretKey = jwtProperty.getRefreshToken().getSecretKey();
-
-        SecretKey key = isAccessToken ? getSigningKey(atSecretKey) : getSigningKey(rtSecretKey);
-        Object userLv = getClaims(token, key).get("userLv");
+        SecretKey key = isAccessToken ? getSigningKey(jwtProperty.getAccessToken().getSecretKey())
+                                      : getSigningKey(jwtProperty.getRefreshToken().getSecretKey());
+        Object userLv = getClaims(token, key).get("userRole");
         return userLv != null ? userLv.toString() : null;
     }
 

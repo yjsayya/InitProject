@@ -44,10 +44,14 @@ public class LoginController {
 
             Long userId = loginInfo.getUserId();
             String userRole = loginInfo.getUserRole();
+
+
+            log.info("userId: {}, userRole: {}", userId, userRole);
             // 2. jwt 발급
             String accessToken = jwtProvider.generateAccessToken(userId, userRole);
             String refreshToken = jwtProvider.generateRefreshToken(userId);
 
+            log.info("accessToken: {}", accessToken);
             log.info("[LOGIN-SUCCESS] email: {}", request.getEmail());
 
             // 3. refreshToken을 저장
@@ -74,8 +78,10 @@ public class LoginController {
                     .ok()
                     .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
                     .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-                    .body(Map.of("message", "로그인 성공"));
-
+                    .body(Map.of(
+                            "code", "200",
+                            "message", "success"
+                    ));
         } catch (AuthenticationException e) {
             log.warn("[LOGIN-FAILURE] 이메일 또는 비밀번호 불일치 - {}", request.getEmail());
             return ResponseEntity

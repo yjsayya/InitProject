@@ -17,11 +17,11 @@ public class LoginRQ {
     private String email;
 
     @NotBlank(message = "비밀번호는 필수 값입니다.")
-    @Size(min = 8, max = 20)
-    @Pattern(
-            regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}$",
-            message = "비밀번호는 영문자와 숫자를 포함한 8~20자리여야 합니다."
-    )
+//    @Size(min = 8, max = 20)
+//    @Pattern(
+//            regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}$",
+//            message = "비밀번호는 영문자와 숫자를 포함한 8~20자리여야 합니다."
+//    )
     private String password;
 
 }
