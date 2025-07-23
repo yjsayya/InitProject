@@ -31,6 +31,24 @@ public class FileUtil {
         private String saveFileName;
     }
 
+    /** 서버에서 파일 읽기 */
+    public static byte[] readFile(String directory, String fileName) {
+        Path filePath = getNormalizedPath(directory, fileName);
+        try {
+            if (!Files.exists(filePath)) {
+                throw new IllegalArgumentException("파일이 존재하지 않습니다: " + filePath);
+            }
+
+            byte[] bytes = Files.readAllBytes(filePath);
+            log.info("[FILE] Reading File: {}", filePath);
+            return bytes;
+        } catch (IOException e) {
+            log.error("파일 읽기 중 오류 발생: {}", filePath, e);
+            throw new IllegalArgumentException("Error occurred during reading file", e);
+        }
+    }
+
+    /** 파일에서 정보 가져오기 */
     public static FileInfo extractFileInfo(MultipartFile file) {
         String originalName = file.getOriginalFilename();
         String extension = "";
@@ -42,6 +60,7 @@ public class FileUtil {
         return new FileInfo(originalName, extension, size);
     }
 
+    /** 파일 저장하기 */
     public static void saveFiles(List<SaveFileInfo> fileInfoList, String uploadDir) {
         try {
             makeDirectory(uploadDir);
@@ -60,6 +79,7 @@ public class FileUtil {
         }
     }
 
+    /** 파일 삭제하기 */
     public static void deleteFile(String fullFilePath) {
         try {
             Path path = Paths.get(fullFilePath).normalize();
