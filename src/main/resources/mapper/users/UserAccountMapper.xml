@@ -3,14 +3,14 @@
 <mapper namespace="init.project.domain.users.repository.UserAccountRepository">
 
     <resultMap id="userAccountMap" type="init.project.domain.users.model.UserAccount">
-        <result property="userId"       column="USER_ID" />
-        <result property="email"        column="EMAIL" />
-        <result property="password"     column="PASSWORD" />
-        <result property="username"     column="USERNAME" />
-        <result property="userRole"     column="USER_ROLE" />
-        <result property="delYn"        column="DEL_YN" />
-        <result property="regDt"        column="REG_DT" />
-        <result property="uptDt"        column="UPT_DT" />
+        <result property="userId"   column="USER_ID" />
+        <result property="email"    column="EMAIL" />
+        <result property="password" column="PASSWORD" />
+        <result property="username" column="USERNAME" />
+        <result property="userRole" column="USER_ROLE" />
+        <result property="delYn"    column="DEL_YN" />
+        <result property="regDt"    column="REG_DT" />
+        <result property="uptDt"    column="UPT_DT" />
     </resultMap>
 
     <select id="findById" resultMap="userAccountMap">
