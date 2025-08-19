@@ -27,7 +27,7 @@ public class JwtRefreshTokenController {
         }
 
         String refreshToken = refreshCookie.getValue();
-        String newAccessToken = jwtRefreshTokenService.checkRefreshToken(refreshToken);
+//        String newAccessToken = jwtRefreshTokenService.checkRefreshToken(refreshToken);
 
         return ApiResponse.success();
     }
