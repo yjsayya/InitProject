@@ -4,6 +4,15 @@ spring:
     username: root
     password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20        # 동시에 열 수 있는 최대 커넥션
+      minimum-idle: 10             # 유휴 상태에서 유지할 커넥션 개수
+      auto-commit: false           # 필요하면 true/false 선택
+      connection-timeout: 60000    # 커넥션 대기 최대 시간(ms) (기본 30초)
+      max-lifetime: 240000         # 커넥션 최대 수명(ms) → 4분으로 설정 (DB wait_timeout=300보다 짧게)
+      idle-timeout: 120000         # 유휴 커넥션 최대 대기 시간(ms), max-lifetime보다 짧게
+      keepalive-time: 90000        # (선택) 주기적으로 SELECT 1 실행해서 커넥션 살려두기
+      validation-timeout: 5000     # 커넥션 검증 쿼리 타임아웃(ms)
 
 
 ########################################################

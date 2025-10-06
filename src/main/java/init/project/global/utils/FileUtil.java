@@ -31,7 +31,7 @@ public class FileUtil {
         private String saveFileName;
     }
 
-    /** 서버에서 파일 읽기 */
+    /** 서버에서 파일 읽어오기 */
     public static byte[] readFile(String directory, String fileName) {
         Path filePath = getNormalizedPath(directory, fileName);
         try {
@@ -48,7 +48,7 @@ public class FileUtil {
         }
     }
 
-    /** 파일에서 정보 가져오기 */
+    /** 파일에서 정보 읽어오기 */
     public static FileInfo extractFileInfo(MultipartFile file) {
         String originalName = file.getOriginalFilename();
         String extension = "";
@@ -61,6 +61,31 @@ public class FileUtil {
     }
 
     /** 파일 저장하기 */
+    public static void saveFile(MultipartFile file, String uploadDir) {
+        try {
+            if (file == null || file.isEmpty()) {
+                throw new IllegalArgumentException("Empty file cannot be saved");
+            }
+
+            makeDirectory(uploadDir);
+
+            String originalName = file.getOriginalFilename();
+            if (originalName == null || originalName.trim().isEmpty()) {
+                originalName = "file_" + System.currentTimeMillis();
+            }
+            String safeFileName = Paths.get(originalName).getFileName().toString();
+
+            Path savePath = getNormalizedPath(uploadDir, safeFileName);
+            try (InputStream in = file.getInputStream()) {
+                Files.copy(in, savePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+            log.info("[FILE] Saving File: {}/{}", uploadDir, safeFileName);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error Occurred During Saving File", e);
+        }
+    }
+
+    /** 파일 목록 저장하기 */
     public static void saveFiles(List<SaveFileInfo> fileInfoList, String uploadDir) {
         try {
             makeDirectory(uploadDir);
