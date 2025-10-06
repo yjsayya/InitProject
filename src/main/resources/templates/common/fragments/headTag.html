@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:fragment="headTagFragment">
+    <title>Admin Dashboard</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" th:href="@{/favicon.ico}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',     // 인디고
+                        secondary: '#64748B',   // 슬레이트 그레이
+                        accent: '#10B981',      // 에메랄드
+                        danger: '#EF4444',      // 레드
+                        warning: '#F59E0B',     // 앰버
+                        success: '#059669',     // 그린
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script th:src="@{/js/apiHandler.js}"></script>
+    <style>
+        /* 커스텀 스타일 */
+        .admin-card {
+            @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+        }
+        .admin-section {
+            @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+        }
+        .admin-button-primary {
+            @apply bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition-colors;
+        }
+        .admin-button-secondary {
+            @apply bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors;
+        }
+        .admin-input {
+            @apply border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary;
+        }
+    </style>
+</head>
+</html>
