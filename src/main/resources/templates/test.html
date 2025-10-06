@@ -1,0 +1,42 @@
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>test</title>
+    <script src="/js/apiHandler.js"></script>
+</head>
+<body>
+    <button onclick="testHandler.testPostApi()">test POST API</button>
+    <button onclick="testHandler.testGetApi()">test GET API</button>
+
+    <form id="wow">
+        <input type="text" name="wow1" value="wow1" hidden />
+        <input type="text" name="wow2" value="wow2" hidden />
+        <input type="text" name="wow3" value="wow3" hidden />
+    </form>
+</body>
+<script>
+    const testHandler = {
+        testPostApi() {
+            let form = document.getElementById('wow');
+            const param = paramHandler.formToObject(form);
+            console.log("param", param);
+            apiHandler.fetchApiPost('/api/test/damn/wow', param, testHandler.successHandler, testHandler.failHandler);
+        },
+        testGetApi() {
+            const param = {
+                wow1: 'wow1',
+                wow2: 'wow2',
+                wow3: 'wow3',
+            }
+            apiHandler.fetchApiGet('/api/test/damn/wow', param, testHandler.successHandler, testHandler.failHandler);
+        },
+        successHandler(data) {
+            console.log('data: ' + data);
+        },
+        failHandler(message) {
+            alert(message);
+        }
+    }
+</script>
+</html>

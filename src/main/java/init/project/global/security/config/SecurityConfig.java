@@ -36,6 +36,7 @@ public class SecurityConfig {
     private final AuthenticationEntryPointImpl authenticationEntryPointImpl;
 
     private final String[] PERMIT_URL = {
+            "/**",
             "/api/user/join",
             "/api/login",
             "/api/test/**",

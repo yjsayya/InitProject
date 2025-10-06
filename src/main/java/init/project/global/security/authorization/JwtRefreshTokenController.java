@@ -19,17 +19,17 @@ public class JwtRefreshTokenController {
 
     private final JwtRefreshTokenService jwtRefreshTokenService;
 
-    @PostMapping
-    public ResponseEntity<?> checkRefreshToken(HttpServletRequest request) {
-        Cookie refreshCookie = WebUtils.getCookie(request, "refreshToken");
-        if (refreshCookie == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token not found.");
-        }
-
-        String refreshToken = refreshCookie.getValue();
-        String newAccessToken = jwtRefreshTokenService.checkRefreshToken(refreshToken);
-
-        return ApiResponse.success();
-    }
+//    @PostMapping
+//    public ResponseEntity<?> checkRefreshToken(HttpServletRequest request) {
+//        Cookie refreshCookie = WebUtils.getCookie(request, "refreshToken");
+//        if (refreshCookie == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token not found.");
+//        }
+//
+//        String refreshToken = refreshCookie.getValue();
+//        String newAccessToken = jwtRefreshTokenService.checkRefreshToken(refreshToken);
+//
+//        return ApiResponse.success();
+//    }
 
 }
