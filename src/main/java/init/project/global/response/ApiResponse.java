@@ -15,25 +15,27 @@ public class ApiResponse<T> {
     private String message;
     private T data;
 
-    public static <T> ResponseEntity<?> success() {
-        ApiResponse<T> body = new ApiResponse<>(HttpStatus.OK.value(),"SUCCESS", null);
-        return ResponseEntity.ok(body);
+    public static ResponseEntity<?> success() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(200, "success", null));
     }
 
     public static <T> ResponseEntity<?> success(T result) {
-        ApiResponse<T> body = new ApiResponse<>(HttpStatus.OK.value(),"SUCCESS", result);
-        return ResponseEntity.ok(body);
-    }
-
-    public static ResponseEntity<?> error(int code, String message) {
         return ResponseEntity
                 .status(HttpStatus.OK)
+                .body(new ApiResponse<>(200, "success", result));
+    }
+
+    public static ResponseEntity<?> error(HttpStatus httpStatus, int code, String message) {
+        return ResponseEntity
+                .status(httpStatus)
                 .body(new ApiResponse<>(code, message, null));
     }
 
-    public static ResponseEntity<?> error(int code) {
+    public static ResponseEntity<?> error(HttpStatus httpStatus, int code) {
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(httpStatus)
                 .body(new ApiResponse<>(code, null, null));
     }
 

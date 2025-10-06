@@ -19,9 +19,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> CustomException(CustomException e) {
+        HttpStatus httpStatus = e.getExceptionCode().getHttpStatus();
+        int code = e.getExceptionCode().getCode();
         String errorMessage = e.getMessage();
+
         log.info("[CustomException]: {}", errorMessage);
-        return new ResponseEntity<>(ApiResponse.error(e.getExceptionCode().getCode(), errorMessage), HttpStatus.OK);
+        return ApiResponse.error(httpStatus, code, errorMessage);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -30,20 +33,20 @@ public class GlobalExceptionHandler {
                 .getFieldError())
                 .getDefaultMessage();
         log.warn("[MethodArgumentNotValidException] {}", errorMessage);
-        return ApiResponse.error(400, errorMessage);
+        return ApiResponse.error(HttpStatus.BAD_REQUEST, 400, errorMessage);
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e) {
+    public ResponseEntity<?> handleRuntimeException(RuntimeException e) {
         String errorMessage = e.getMessage();
         log.error("[RuntimeException] error: {}", errorMessage, e);
-        return ApiResponse.error(123, errorMessage);
+        return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, 123, errorMessage);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> exceptionHandler(Exception e) {
+    public ResponseEntity<?> handleException(Exception e) {
         log.error("UnknownException: {}", e.toString(), e);
-        return ApiResponse.error(500, "Unknown Error");
+        return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, 500, "오류가 발생했습니다. 관리자에게 문의해주세요.");
     }
 
 }

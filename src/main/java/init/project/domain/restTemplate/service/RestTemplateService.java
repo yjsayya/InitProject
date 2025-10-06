@@ -40,7 +40,6 @@ public class RestTemplateService {
                 .queryParam("param2", "변수2")
                 .queryParam("param3", "변수3")
                 .toUriString();
-
         // [2]
         ResponseEntity<TestApiRS> responseEntity = null;
         try {
@@ -48,7 +47,6 @@ public class RestTemplateService {
         } catch (HttpClientErrorException e) {
             log.warn("HttpClientErrorException: {}", e.getResponseBodyAsString());
         }
-
         // [3]
         TestApiRS response = responseEntity != null ? responseEntity.getBody() : null;
         if (response != null) {
@@ -67,7 +65,6 @@ public class RestTemplateService {
         headers.set("Authorization", "Basic " + "token 정보들");
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // [1-2] Request Body
         HttpEntity<Map<String,Object>> requestParam = new HttpEntity<>(Map.of(
                 "param1", "변수1",
                 "param2", "변수2",
