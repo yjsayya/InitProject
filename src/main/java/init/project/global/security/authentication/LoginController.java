@@ -86,7 +86,7 @@ public class LoginController {
             log.warn("[LOGIN-FAILURE] 이메일 또는 비밀번호 불일치 - {}", request.getEmail());
             return ResponseEntity
                     .status(401)
-                    .body(Map.of("message", "이메일 또는 비밀번호가 올바르지 않습니다."));
+                    .body(Map.of("message", "아이디 또는 비밀번호가 올바르지 않습니다."));
         } catch (Exception e) {
             log.error("[LOGIN-ERROR] 로그인 중 예외 발생", e);
             return ResponseEntity
