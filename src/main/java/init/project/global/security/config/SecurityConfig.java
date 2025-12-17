@@ -83,9 +83,15 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("*"));
+
+//        configuration.setAllowedOrigins(List.of(
+//                "http://localhost:5173"
+//        ));
+
         configuration.setAllowedMethods(List.of("*"));
+//        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("X-Requested-With", "Content-Type", "Authorization", "X-XSRF-token", "Accept"));
-        configuration.setAllowCredentials(false);
+        configuration.setAllowCredentials(false); // true로 바꿔놓으면
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
