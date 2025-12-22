@@ -59,10 +59,6 @@ const apiHandler = {
             let message = responseData['message'];
             let data = responseData['data'];
 
-            console.log("code: " + code);
-            console.log("message: " + message);
-            console.log("data:", data);
-
             if (code === 200) {
                 success(data);
             } else {
