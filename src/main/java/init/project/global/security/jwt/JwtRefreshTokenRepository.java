@@ -15,4 +15,6 @@ public interface JwtRefreshTokenRepository {
     void saveRefreshToken(@Param("jwtRefreshToken") JwtRefreshToken jwtRefreshToken);
     void updateRefreshToken(@Param("jwtRefreshToken") JwtRefreshToken jwtRefreshToken);
 
+    int deleteByUserId(@Param("jwtRefreshToken") JwtRefreshToken jwtRefreshToken);
+
 }

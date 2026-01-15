@@ -45,7 +45,6 @@ public class LoginController {
             Long userId = loginInfo.getUserId();
             String userRole = loginInfo.getUserRole();
 
-
             log.info("userId: {}, userRole: {}", userId, userRole);
             // 2. jwt 발급
             String accessToken = jwtProvider.generateAccessToken(userId, userRole);

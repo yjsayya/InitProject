@@ -66,11 +66,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(accessDeniedHandlerImpl)
                         .authenticationEntryPoint(authenticationEntryPointImpl)
                 )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .addLogoutHandler(logoutHandler())
-                        .logoutSuccessHandler(logoutSuccessHandler())
-                )
+                .logout(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

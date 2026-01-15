@@ -44,5 +44,12 @@ public class JwtRefreshTokenService {
 //        }
 //        return jwtProvider.generateAccessToken()
 //    }
+    @Transactional
+    public void unactiveRefreshToken(Long userId) {
+        int cnt = jwtRefreshTokenRepository.deleteByUserId(JwtRefreshToken.builder()
+                .userId(userId)
+                .build());
+        if (cnt < 1) { throw new IllegalArgumentException("SQL ERROR"); }
+    }
 
 }
