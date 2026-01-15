@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 public class FileUtil {
@@ -29,6 +30,16 @@ public class FileUtil {
     public static class SaveFileInfo {
         private MultipartFile file;
         private String saveFileName;
+    }
+
+    /** 파일 유효성 체크 - 확장자 */
+    public static String allowedFileExtentsionYn(String extentsion, Set<String> allowedFileExtensions) {
+        return (allowedFileExtensions.contains(extentsion)) ? "Y" : "N";
+    }
+
+    /** 파일 유효성 체크 - 파일크기*/
+    public static String allowedFileSizeYn(int fileSize, int maxFileSize) {
+        return (fileSize <= maxFileSize) ? "Y" : "N";
     }
 
     /** 서버에서 파일 읽어오기 */
@@ -79,7 +90,7 @@ public class FileUtil {
             try (InputStream in = file.getInputStream()) {
                 Files.copy(in, savePath, StandardCopyOption.REPLACE_EXISTING);
             }
-            log.info("[FILE] Saving File: {}/{}", uploadDir, safeFileName);
+            log.info("[FILE-] Saving File: {}/{}", uploadDir, safeFileName);
         } catch (Exception e) {
             throw new IllegalArgumentException("Error Occurred During Saving File", e);
         }
