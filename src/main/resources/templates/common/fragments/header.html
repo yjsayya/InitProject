@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="headerFragment">
+    <div class="h-16 flex items-center justify-between px-6">
+        <!-- 왼쪽: 페이지 제목 -->
+        <div class="flex items-center space-x-4">
+            <h1 class="text-xl font-semibold text-gray-900" id="pageTitle">Dashboard</h1>
+        </div>
+        
+        <!-- 오른쪽: 사용자 정보 및 알림 -->
+        <div class="flex items-center space-x-4">
+            <!-- 검색 -->
+            <div class="relative hidden md:block">
+                <input type="text" placeholder="검색..." 
+                       class="admin-input w-64 pl-10 pr-4 py-2 text-sm">
+                <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+            </div>
+            
+            <!-- 알림 -->
+            <button class="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                <i data-lucide="bell" class="w-5 h-5"></i>
+                <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs"></span>
+            </button>
+            
+            <!-- 사용자 프로필 -->
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                    <span class="text-white text-sm font-medium">A</span>
+                </div>
+                <div class="hidden md:block">
+                    <p class="text-sm font-medium text-gray-900">Admin User</p>
+                    <p class="text-xs text-gray-500">admin@example.com</p>
+                </div>
+                <button class="text-gray-600 hover:text-gray-900">
+                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 페이지 제목 동적 변경 함수
+        function setPageTitle(title) {
+            document.getElementById('pageTitle').textContent = title;
+        }
+        
+        // Lucide 아이콘 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
+    </script>
+</div>
+</html>

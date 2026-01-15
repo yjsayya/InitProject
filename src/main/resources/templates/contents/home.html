@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/mainLayout}">
+<div layout:fragment="content">
+    <!-- 대시보드 헤더 -->
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">대시보드</h2>
+        <p class="text-gray-600 mt-1">시스템 현황을 한눈에 확인하세요</p>
+    </div>
+
+    <!-- 통계 카드들 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- 총 사용자 -->
+        <div class="admin-card rounded-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600">총 사용자</p>
+                    <p class="text-2xl font-bold text-gray-900">1,234</p>
+                    <p class="text-sm text-success flex items-center mt-1">
+                        <i data-lucide="trending-up" class="w-4 h-4 mr-1"></i>
+                        +12% 이번 달
+                    </p>
+                </div>
+                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <i data-lucide="users" class="w-6 h-6 text-primary"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- 활성 사용자 -->
+        <div class="admin-card rounded-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600">활성 사용자</p>
+                    <p class="text-2xl font-bold text-gray-900">856</p>
+                    <p class="text-sm text-success flex items-center mt-1">
+                        <i data-lucide="trending-up" class="w-4 h-4 mr-1"></i>
+                        +8% 이번 주
+                    </p>
+                </div>
+                <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
+                    <i data-lucide="user-check" class="w-6 h-6 text-accent"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- 총 주문 -->
+        <div class="admin-card rounded-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600">총 주문</p>
+                    <p class="text-2xl font-bold text-gray-900">3,456</p>
+                    <p class="text-sm text-warning flex items-center mt-1">
+                        <i data-lucide="trending-down" class="w-4 h-4 mr-1"></i>
+                        -2% 이번 주
+                    </p>
+                </div>
+                <div class="w-12 h-12 bg-warning/10 rounded-lg flex items-center justify-center">
+                    <i data-lucide="shopping-cart" class="w-6 h-6 text-warning"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- 매출 -->
+        <div class="admin-card rounded-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600">매출</p>
+                    <p class="text-2xl font-bold text-gray-900">₩12.3M</p>
+                    <p class="text-sm text-success flex items-center mt-1">
+                        <i data-lucide="trending-up" class="w-4 h-4 mr-1"></i>
+                        +15% 이번 달
+                    </p>
+                </div>
+                <div class="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center">
+                    <i data-lucide="dollar-sign" class="w-6 h-6 text-success"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 차트 및 테이블 영역 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- 사용자 활동 차트 -->
+        <div class="admin-card rounded-lg">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">사용자 활동</h3>
+                <select class="admin-input text-sm">
+                    <option>최근 7일</option>
+                    <option>최근 30일</option>
+                    <option>최근 3개월</option>
+                </select>
+            </div>
+            <div class="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+                <div class="text-center">
+                    <i data-lucide="bar-chart-3" class="w-12 h-12 text-gray-400 mx-auto mb-2"></i>
+                    <p class="text-gray-500">차트 영역</p>
+                    <p class="text-sm text-gray-400">차트 라이브러리를 연동하여 사용하세요</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 최근 활동 -->
+        <div class="admin-card rounded-lg">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">최근 활동</h3>
+                <button class="text-primary text-sm font-medium">전체 보기</button>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                        <i data-lucide="user-plus" class="w-4 h-4 text-primary"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">새로운 사용자가 가입했습니다</p>
+                        <p class="text-xs text-gray-500">5분 전</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-success/10 rounded-full flex items-center justify-center">
+                        <i data-lucide="shopping-cart" class="w-4 h-4 text-success"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">새로운 주문이 들어왔습니다</p>
+                        <p class="text-xs text-gray-500">10분 전</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-warning/10 rounded-full flex items-center justify-center">
+                        <i data-lucide="alert-circle" class="w-4 h-4 text-warning"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">시스템 점검이 필요합니다</p>
+                        <p class="text-xs text-gray-500">1시간 전</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center">
+                        <i data-lucide="mail" class="w-4 h-4 text-accent"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">새로운 문의가 접수되었습니다</p>
+                        <p class="text-xs text-gray-500">2시간 전</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 하단 테이블 영역 -->
+    <div class="admin-card rounded-lg">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-900">최근 사용자</h3>
+            <div class="flex items-center space-x-3">
+                <input type="text" placeholder="사용자 검색..." class="admin-input text-sm">
+                <button class="admin-button-primary text-sm">검색</button>
+            </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-gray-200">
+                        <th class="text-left py-3 px-4 font-medium text-gray-900">사용자</th>
+                        <th class="text-left py-3 px-4 font-medium text-gray-900">이메일</th>
+                        <th class="text-left py-3 px-4 font-medium text-gray-900">상태</th>
+                        <th class="text-left py-3 px-4 font-medium text-gray-900">가입일</th>
+                        <th class="text-left py-3 px-4 font-medium text-gray-900">액션</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-3 px-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                                    <span class="text-white text-sm font-medium">김</span>
+                                </div>
+                                <span class="font-medium text-gray-900">김철수</span>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 text-gray-600">kim@example.com</td>
+                        <td class="py-3 px-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">
+                                활성
+                            </span>
+                        </td>
+                        <td class="py-3 px-4 text-gray-600">2024-01-15</td>
+                        <td class="py-3 px-4">
+                            <button class="text-primary hover:text-primary/80 text-sm font-medium">관리</button>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-3 px-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
+                                    <span class="text-white text-sm font-medium">이</span>
+                                </div>
+                                <span class="font-medium text-gray-900">이영희</span>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 text-gray-600">lee@example.com</td>
+                        <td class="py-3 px-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning/10 text-warning">
+                                대기
+                            </span>
+                        </td>
+                        <td class="py-3 px-4 text-gray-600">2024-01-14</td>
+                        <td class="py-3 px-4">
+                            <button class="text-primary hover:text-primary/80 text-sm font-medium">관리</button>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-3 px-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+                                    <span class="text-white text-sm font-medium">박</span>
+                                </div>
+                                <span class="font-medium text-gray-900">박민수</span>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 text-gray-600">park@example.com</td>
+                        <td class="py-3 px-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-danger/10 text-danger">
+                                비활성
+                            </span>
+                        </td>
+                        <td class="py-3 px-4 text-gray-600">2024-01-13</td>
+                        <td class="py-3 px-4">
+                            <button class="text-primary hover:text-primary/80 text-sm font-medium">관리</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
+            <p class="text-sm text-gray-600">총 1,234명의 사용자</p>
+            <div class="flex items-center space-x-2">
+                <button class="admin-button-secondary text-sm">이전</button>
+                <span class="text-sm text-gray-600">1 / 50</span>
+                <button class="admin-button-secondary text-sm">다음</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 페이지 로드 시 아이콘 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
+    </script>
+</div>
+</html>

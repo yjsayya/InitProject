@@ -92,7 +92,6 @@ public class RestTemplateService {
         }
 
         // 여기에서 이제 데이터 처리 쭉 하면 됨 ...
-
     }
 
 }

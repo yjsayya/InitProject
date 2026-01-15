@@ -17,21 +17,20 @@ import org.springframework.stereotype.Component;
 public class LoginProvider implements AuthenticationProvider {
 
     private final LoginService loginService;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder encoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
+        String email = authentication.getName();
+        String rawPassword = authentication.getCredentials().toString();
 
-        String email = token.getName();
-        String password  = token.getCredentials().toString();
+        UserDetailsImpl userDetails = loginService.loadUserByUsername(email);
 
-        UserDetailsImpl loginInfo = loginService.loadUserByUsername(email);
-
-        if (!passwordEncoder.matches(password, loginInfo.getPassword())) {
-            throw new BadCredentialsException("비밀번호가 올바르지 않습니다.");
+        if (!encoder.matches(rawPassword, userDetails.getPassword())) {
+            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
-        return new UsernamePasswordAuthenticationToken(loginInfo, password, loginInfo.getAuthorities());
+
+        return new UsernamePasswordAuthenticationToken(userDetails, rawPassword, userDetails.getAuthorities());
     }
 
     @Override
