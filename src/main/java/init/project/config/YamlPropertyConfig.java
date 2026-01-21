@@ -1,4 +1,4 @@
-package init.project.global.config;
+package init.project.config;
 
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.env.PropertiesPropertySource;

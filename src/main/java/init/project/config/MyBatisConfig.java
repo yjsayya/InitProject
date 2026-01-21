@@ -1,4 +1,4 @@
-package init.project.global.config;
+package init.project.config;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;

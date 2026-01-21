@@ -1,4 +1,4 @@
-package init.project.global.config;
+package init.project.config;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

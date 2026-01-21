@@ -1,4 +1,4 @@
-package init.project.global.config;
+package init.project.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

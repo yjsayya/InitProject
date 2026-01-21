@@ -1,4 +1,4 @@
-package init.project.global.config;
+package init.project.config;
 
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;

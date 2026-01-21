@@ -1,4 +1,4 @@
-package init.project.global.config;
+package init.project.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
