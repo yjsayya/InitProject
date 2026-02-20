@@ -1,0 +1,16 @@
+[UI에 대한 고정]
+1. border-radius는 무조건 8px 고정
+2.
+
+
+SpringBoot 코드 컨밴션
+
+[repository]
+1. 메서드는 최대한 JPA 메서드 명명규칙을 따를 것
+2. mybatis에서 @Param("") 어노테이션으로 파라미터 이름 넣어주고 xml에서는 parametersType을 제외할것
+3. 쿼리 조회 행 수가 1개인 경우에는 Optional로 처리할 것
+4. 쿼리문에 넣는 파라미터가 두개 이상인 경우에는 entity 객체에 넣어서 처리할 것
+5.
+
+[Service]
+1.

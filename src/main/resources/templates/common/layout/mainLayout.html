@@ -2,26 +2,234 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head th:replace="~{common/fragments/headTag :: headTagFragment}"></head>
-<body class="h-screen overflow-hidden bg-gray-50">
-    <div class="flex h-full">
-        <!-- 사이드바 -->
-        <div th:replace="~{common/fragments/sidebar :: sidebarFragment}"
-            class="w-64 bg-white shadow-lg flex-shrink-0 h-full border-r border-gray-200">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link rel="icon" th:href="@{/favicon.ico}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+    <link rel="stylesheet" th:href="@{/css/tailwind.css}">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script th:src="@{/js/apiHandler.js}" defer></script>
+    <th:block layout:fragment="pageScript"></th:block>
+</head>
+<body class="bg-[#F8FAFC] font-['Pretendard','Noto_Sans_KR',system-ui,sans-serif] h-screen overflow-hidden">
+<div class="flex h-screen overflow-hidden">
+    <aside
+        id="sidebar"
+       class="w-60 min-w-60 bg-[#1E293B] flex flex-col h-screen overflow-hidden transition-all duration-200"
+    >
+        <!-- 로고 -->
+        <div class="px-5 py-5 border-b border-[#334155]">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 bg-[#3B5BDB] rounded-lg flex items-center justify-center shrink-0">
+                    <i data-lucide="layers" class="w-[18px] h-[18px] text-white"></i>
+                </div>
+                <span class="text-base font-extrabold text-[#F1F5F9] tracking-tight">
+                    AdminKit
+                </span>
+            </div>
         </div>
-        
-        <!-- 메인 콘텐츠 영역 -->
-        <div class="flex-1 flex flex-col h-full">
-            <!-- 상단 헤더 -->
-            <header th:replace="~{common/fragments/header :: headerFragment}"
-                    class="bg-white shadow-sm flex-shrink-0 border-b border-gray-200">
-            </header>
-            
-            <!-- 메인 콘텐츠 -->
-            <main class="flex-1 overflow-auto p-6">
-                <div layout:fragment="content" class="w-full h-full"></div>
-            </main>
+
+        <!-- 네비게이션 -->
+        <nav class="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-6">
+            <div>
+                <p class="nav-group-label">메인</p>
+                <div class="flex flex-col gap-0.5">
+                    <a href="/home" class="nav-item" data-title="대시보드">
+                        <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                        <span>대시보드</span>
+                    </a>
+                    <a href="#" class="nav-item" data-title="분석">
+                        <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                        <span>분석</span>
+                    </a>
+                    <a href="#" class="nav-item" data-title="리포트">
+                        <i data-lucide="file-bar-chart" class="nav-icon"></i>
+                        <span>리포트</span>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <p class="nav-group-label">관리</p>
+                <div class="flex flex-col gap-0.5">
+                    <a href="#" class="nav-item" data-title="사용자 관리">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        <span>사용자 관리</span>
+                    </a>
+                    <a href="#" class="nav-item" data-title="권한 관리">
+                        <i data-lucide="shield-check" class="nav-icon"></i>
+                        <span>권한 관리</span>
+                    </a>
+                    <a href="#" class="nav-item" data-title="콘텐츠 관리">
+                        <i data-lucide="folder-open" class="nav-icon"></i>
+                        <span>콘텐츠 관리</span>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <p class="nav-group-label">시스템</p>
+                <div class="flex flex-col gap-0.5">
+                    <a href="#" class="nav-item" data-title="설정">
+                        <i data-lucide="settings" class="nav-icon"></i>
+                        <span>설정</span>
+                    </a>
+                    <a href="#" class="nav-item" data-title="로그">
+                        <i data-lucide="scroll-text" class="nav-icon"></i>
+                        <span>로그</span>
+                    </a>
+                </div>
+            </div>
+
+        </nav>
+
+        <!-- 하단 유저 정보 -->
+        <div class="px-3 py-3 border-t border-[#334155]">
+            <div class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg cursor-pointer
+                        transition-colors duration-150 hover:bg-[#334155]">
+                <div class="w-8 h-8 rounded-full shrink-0 flex items-center justify-center
+                            bg-gradient-to-br from-[#3B5BDB] to-[#6366F1]">
+                    <span class="text-xs font-bold text-white">A</span>
+                </div>
+                <div class="flex-1 overflow-hidden">
+                    <p class="text-[0.8125rem] font-semibold text-[#F1F5F9] truncate">Admin User</p>
+                    <p class="text-[0.6875rem] text-[#64748B] truncate">admin@example.com</p>
+                </div>
+                <i data-lucide="log-out" class="w-[15px] h-[15px] text-[#64748B] shrink-0"></i>
+            </div>
         </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <header class="h-[60px] bg-white border-b border-[#E2E8F0] flex items-center justify-between px-6 shrink-0">
+            <div class="flex items-center gap-3">
+                <button id="sidebarToggle"
+                    onclick="sidebarHandler.toggle()"
+                    class="hidden p-1.5 border-none bg-transparent rounded-md cursor-pointer text-[#475569] hover:bg-[#F1F5F9] transition-colors duration-150"
+                >
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-[0.8125rem] text-[#94A3B8]">Admin</span>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-[#CBD5E1]"></i>
+                    <span id="pageTitle"
+                        class="text-[0.8125rem] font-semibold text-[#0F172A]"
+                    >
+                        대시보드
+                    </span>
+                </div>
+            </div>
+
+            <!-- 오른쪽 -->
+            <div class="flex items-center gap-2">
+                <div class="search-wrap">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <label>
+                        <input type="text" placeholder="검색..." class="input w-48 pl-9">
+                    </label>
+                </div>
+                <!-- 알림 -->
+                <button class="relative w-9 h-9 flex items-center justify-center
+                               border border-[#E2E8F0] rounded-lg bg-white
+                               cursor-pointer text-[#475569]
+                               hover:border-[#CBD5E1] hover:bg-[#F8FAFC]
+                               transition-all duration-150">
+                    <i data-lucide="bell" class="w-[17px] h-[17px]"></i>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-[#DC2626] rounded-full border-2 border-white"></span>
+                </button>
+                <!-- 구분선 -->
+                <div class="w-px h-6 bg-[#E2E8F0] mx-1"></div>
+                <!-- 프로필 -->
+                <div class="flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer
+                            transition-colors duration-150 hover:bg-[#F8FAFC]">
+                    <div class="w-[30px] h-[30px] rounded-full flex items-center justify-center
+                                bg-gradient-to-br from-[#3B5BDB] to-[#6366F1]">
+                        <span class="text-xs font-bold text-white">A</span>
+                    </div>
+                    <span class="text-sm font-semibold text-[#0F172A]">Admin</span>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[#94A3B8]"></i>
+                </div>
+
+            </div>
+        </header>
+        <main class="flex-1 overflow-y-auto p-6">
+            <div layout:fragment="content"></div>
+        </main>
     </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        lucide.createIcons();
+        sidebarHandler.init();
+    });
+
+    const sidebarHandler = {
+        init() {
+            const path = window.location.pathname;
+            document.querySelectorAll('.nav-item').forEach(item => {
+                const href = item.getAttribute('href');
+                if (href && href !== '#' && path.startsWith(href)) {
+                    item.classList.add('active');
+                    const title = item.getAttribute('data-title');
+                    if (title) document.getElementById('pageTitle').textContent = title;
+                }
+                item.addEventListener('click', function () {
+                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                    this.classList.add('active');
+                    const title = this.getAttribute('data-title');
+                    if (title) document.getElementById('pageTitle').textContent = title;
+                });
+            });
+        },
+        toggle() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        }
+    };
+
+    function setPageTitle(title) {
+        document.getElementById('pageTitle').textContent = title;
+    }
+
+    const toast = {
+        show(message, type = 'default') {
+            const container = document.getElementById('toastContainer');
+            const config = {
+                success: { bg: '#ECFDF5', border: '#A7F3D0', color: '#0F9D6B', icon: 'circle-check' },
+                error:   { bg: '#FEF2F2', border: '#FECACA', color: '#DC2626', icon: 'circle-x' },
+                warning: { bg: '#FFFBEB', border: '#FDE68A', color: '#B45309', icon: 'triangle-alert' },
+                default: { bg: '#FFFFFF', border: '#E2E8F0', color: '#3B5BDB', icon: 'info' },
+            };
+            const c = config[type] || config.default;
+            const el = document.createElement('div');
+            el.className = 'toast';
+            el.style.cssText = `background-color:${c.bg}; border-color:${c.border};`;
+            el.innerHTML = `
+                <i data-lucide="${c.icon}" style="width:18px;height:18px;color:${c.color};flex-shrink:0;"></i>
+                <span style="color:#0F172A;flex:1;">${message}</span>
+                <button onclick="this.parentElement.remove()"
+                        style="border:none;background:transparent;cursor:pointer;padding:0;color:#94A3B8;">
+                    <i data-lucide="x" style="width:15px;height:15px;"></i>
+                </button>
+            `;
+            container.appendChild(el);
+            lucide.createIcons();
+            setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transition = 'opacity 0.3s';
+                setTimeout(() => el.remove(), 300);
+            }, 3500);
+        },
+        success(msg) { this.show(msg, 'success'); },
+        error(msg)   { this.show(msg, 'error'); },
+        warning(msg) { this.show(msg, 'warning'); },
+        info(msg)    { this.show(msg, 'default'); },
+    };
+</script>
 </body>
 </html>

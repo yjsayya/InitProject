@@ -1,0 +1,421 @@
+# Thymeleaf + Vanilla JS 개발 규칙
+> React 스타일의 구조화된 바닐라 JS 작성 가이드
+
+---
+
+## 1. 파일 구조
+
+각 페이지는 아래 구조를 따른다.
+
+```
+templates/page/{domain}/{pageName}.html
+static/console/css/{domain}/{pageName}.css
+static/console/js/{domain}/{pageName}.js
+```
+
+---
+
+## 2. JS 파일 기본 구조
+
+모든 JS 파일은 **IIFE(즉시 실행 함수)** 로 감싸고, 아래 섹션 순서를 반드시 지킨다.
+
+```javascript
+const {pageName} = (() => {
+
+    // =============================================
+    // 1. STATE - 페이지에서 사용하는 모든 데이터
+    // =============================================
+    const state = {
+        currentPage: 1,
+        totalPage: 0,
+        list: [],
+        searchParams: {},
+    };
+
+    // =============================================
+    // 2. SET STATE - state 업데이트 함수
+    // =============================================
+    function setState(newState) {
+        Object.assign(state, newState);
+    }
+
+    // =============================================
+    // 3. RENDER - DOM 렌더링만 담당
+    // =============================================
+    const render = {
+        // 예: list, paging, modal 등
+    };
+
+    // =============================================
+    // 4. FETCH - API 호출만 담당
+    // =============================================
+    const fetch = {
+        // 예: list(page), detail(id) 등
+    };
+
+    // =============================================
+    // 5. HANDLER - 사용자 액션(이벤트) 처리
+    // =============================================
+    const handler = {
+        // 예: onSearch(), onReset(), onSubmit() 등
+    };
+
+    // =============================================
+    // 6. INIT - 페이지 최초 진입점
+    // =============================================
+    function init() {
+        fetch.list(1);
+    }
+
+    // 외부에 노출할 것만 반환 (handler는 HTML onclick에서 호출하므로 노출 필수)
+    return { handler };
+
+})();
+```
+
+---
+
+## 3. 섹션별 역할 및 규칙
+
+### 3-1. STATE
+- 페이지에서 사용하는 **모든 데이터는 state에서 관리**한다.
+- DOM에서 직접 값을 읽는 행위는 **handler에서만** 허용한다.
+- state를 직접 변경하지 않고 반드시 `setState()`를 통해 변경한다.
+
+```javascript
+// ❌ 금지
+state.currentPage = 2;
+
+// ✅ 허용
+setState({ currentPage: 2 });
+```
+
+### 3-2. RENDER
+- **화면 그리기만** 담당한다. API 호출 금지.
+- state의 데이터를 읽어서 DOM을 업데이트한다.
+- 반복되는 HTML은 template literal로 작성한다.
+
+```javascript
+const render = {
+    list() {
+        const container = document.getElementById('listContainer');
+        if (!state.list.length) {
+            container.innerHTML = `<tr><td colspan="5">데이터가 없습니다.</td></tr>`;
+            return;
+        }
+        container.innerHTML = state.list.map((item, index) => `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${item.name}</td>
+                <td>
+                    <button onclick="{pageName}.handler.onDelete('${item.id}')">삭제</button>
+                </td>
+            </tr>
+        `).join('');
+    },
+    paging() {
+        pagingHandler.render('pagingContainer', state.currentPage, state.totalPage, (page) => {
+            fetch.list(page);
+        });
+    }
+};
+```
+
+### 3-3. FETCH
+- **API 호출만** 담당한다. DOM 조작 금지.
+- 반드시 `apiHandler`를 사용한다. 직접 `fetch()`를 호출하지 않는다.
+- 성공 시 `setState()` → `render()` 순서로 처리한다.
+
+```javascript
+const fetch = {
+    list(page = 1) {
+        apiHandler.fetchApiGet('/console/v1/api/{domain}', { ...state.searchParams, page },
+            (data) => {
+                setState({ list: data.list, currentPage: page, totalPage: data.totalPage });
+                render.list();
+                render.paging();
+            },
+            (message) => alertHandler.showWarnAlert(message)
+        );
+    },
+    detail(id) {
+        apiHandler.fetchApiGet(`/console/v1/api/{domain}/${id}`, null,
+            (data) => {
+                setState({ detail: data });
+                render.detail();
+            },
+            (message) => alertHandler.showWarnAlert(message)
+        );
+    }
+};
+```
+
+### 3-4. HANDLER
+- **사용자 액션 처리만** 담당한다.
+- DOM에서 값을 읽고 유효성 검사 후 fetch를 호출한다.
+- HTML의 `onclick`에서 직접 호출되므로 반드시 `return`에 포함시킨다.
+
+```javascript
+const handler = {
+    onSearch() {
+        const keyword = document.getElementById('keyword').value.trim();
+        setState({ searchParams: { keyword } });
+        fetch.list(1);
+    },
+    onReset() {
+        setState({ searchParams: {} });
+        document.getElementById('searchForm').reset();
+        fetch.list(1);
+    },
+    onDelete(id) {
+        if (!confirm('삭제하시겠습니까?')) return;
+        apiHandler.fetchApiDelete(
+            `/console/v1/api/{domain}/${id}`,
+            null,
+            () => {
+                alertHandler.showInfoAlert('삭제되었습니다.');
+                fetch.list(state.currentPage);
+            },
+            (message) => alertHandler.showWarnAlert(message)
+        );
+    }
+};
+```
+
+---
+
+## 4. 이벤트 바인딩 규칙
+
+### ✅ 반드시 HTML 태그에 직접 작성한다.
+
+```html
+<!-- ✅ 올바른 방식 -->
+<button onclick="{pageName}.handler.onSearch()">검색</button>
+<button onclick="{pageName}.handler.onReset()">초기화</button>
+<button onclick="{pageName}.handler.onDelete('[[${item.id}]]')">삭제</button>
+<input type="text" id="keyword" onkeypress="if(event.key==='Enter') {pageName}.handler.onSearch()">
+```
+
+```javascript
+// ❌ 금지 - JS에서 addEventListener 사용 금지
+document.getElementById('searchBtn').addEventListener('click', handler.onSearch);
+```
+
+### 이유
+- HTML 태그만 봐도 어떤 동작이 연결되어 있는지 즉시 파악 가능
+- JS 파일을 열지 않아도 화면 흐름을 이해할 수 있음
+
+---
+
+## 5. API 호출 규칙
+
+반드시 `apiHandler`의 메서드를 사용한다.
+
+```javascript
+// GET 요청 - params는 객체로 전달 (내부에서 queryString 변환)
+apiHandler.fetchApiGet(url, params, successHandler, failHandler);
+
+// POST 요청 - params는 반드시 JSON.stringify()
+apiHandler.fetchApiPost(url, JSON.stringify(params), successHandler, failHandler);
+
+// PUT 요청
+apiHandler.fetchApiPut(url, JSON.stringify(params), successHandler, failHandler);
+
+// PATCH 요청
+apiHandler.fetchApiPatch(url, JSON.stringify(params), successHandler, failHandler);
+
+// DELETE 요청
+apiHandler.fetchApiDelete(url, JSON.stringify(params), successHandler, failHandler);
+```
+
+```javascript
+// ❌ 금지 - 직접 fetch() 호출 금지
+fetch('/api/something', { method: 'GET' });
+
+// ❌ 금지 - axios 등 외부 라이브러리 사용 금지
+axios.get('/api/something');
+```
+
+---
+
+## 6. 네이밍 규칙
+
+| 대상 | 규칙 | 예시 |
+|------|------|------|
+| IIFE 변수명 | camelCase + Page 제거 | `campaignHandler`, `templateHandler` |
+| handler 함수 | on + 동사 | `onSearch`, `onDelete`, `onSubmit` |
+| fetch 함수 | 명사 또는 동사+명사 | `list`, `detail`, `fetchById` |
+| render 함수 | 렌더링 대상 명사 | `list`, `paging`, `modal` |
+| state 키 | camelCase | `currentPage`, `searchParams` |
+| DOM id | kebab-case | `list-container`, `search-btn` |
+
+---
+
+## 7. HTML 파일 규칙
+
+### 기본 템플릿
+
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>페이지명 - Almani Console</title>
+    <!-- CSS: 공통 먼저, 페이지별 나중에 -->
+    <link rel="stylesheet" th:href="@{/console/css/common/common.css}">
+    <link rel="stylesheet" th:href="@{/console/css/common/alert.css}">
+    <link rel="stylesheet" th:href="@{/console/css/common/modal.css}">
+    <link rel="stylesheet" th:href="@{/console/css/common/toast.css}">
+    <link rel="stylesheet" th:href="@{/console/css/{domain}/{pageName}.css}">
+    <!-- JS: defer로 로드, 공통 먼저 -->
+    <script th:src="@{/console/js/common/common.js}" defer></script>
+    <script th:src="@{/console/js/common/alert.js}" defer></script>
+    <script th:src="@{/console/js/common/modal.js}" defer></script>
+    <script th:src="@{/console/js/common/toast.js}" defer></script>
+    <script th:src="@{/console/js/{domain}/{pageName}.js}" defer></script>
+</head>
+<body>
+    <!-- 레이아웃 -->
+</body>
+</html>
+```
+
+### Thymeleaf 데이터를 JS state에 주입할 때
+
+```html
+<!-- ✅ script 태그로 서버 데이터를 JS에 전달 -->
+<script th:inline="javascript">
+    const serverData = {
+        userId: [[${userId}]],
+        siteList: [[${siteList}]]
+    };
+</script>
+```
+
+---
+
+## 8. 전체 예시
+
+### {pageName}.js
+
+```javascript
+const campaignHandler = (() => {
+
+    // 1. STATE
+    const state = {
+        currentPage: 1,
+        totalPage: 0,
+        list: [],
+        searchParams: {
+            keyword: '',
+            status: '',
+        },
+    };
+
+    // 2. SET STATE
+    function setState(newState) {
+        Object.assign(state, newState);
+    }
+
+    // 3. RENDER
+    const render = {
+        list() {
+            const tbody = document.getElementById('campaignList');
+            if (!state.list.length) {
+                tbody.innerHTML = `<tr><td colspan="5" class="empty-row">캠페인이 없습니다.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = state.list.map(item => `
+                <tr>
+                    <td>${item.campaignId}</td>
+                    <td>${item.campaignName}</td>
+                    <td>${item.status}</td>
+                    <td>
+                        <button class="btn-sm" onclick="campaignHandler.handler.onDelete('${item.campaignId}')">삭제</button>
+                    </td>
+                </tr>
+            `).join('');
+        },
+        paging() {
+            pagingHandler.render('pagingContainer', state.currentPage, state.totalPage, (page) => {
+                fetch.list(page);
+            });
+        }
+    };
+
+    // 4. FETCH
+    const fetch = {
+        list(page = 1) {
+            apiHandler.fetchApiGet(
+                '/console/v1/api/alimtalk/campaign',
+                { ...state.searchParams, page },
+                (data) => {
+                    setState({ list: data.list, currentPage: page, totalPage: data.totalPage });
+                    render.list();
+                    render.paging();
+                },
+                (message) => alertHandler.showWarnAlert(message)
+            );
+        }
+    };
+
+    // 5. HANDLER
+    const handler = {
+        onSearch() {
+            const keyword = document.getElementById('keyword').value.trim();
+            const status  = document.getElementById('status').value;
+            setState({ searchParams: { keyword, status } });
+            fetch.list(1);
+        },
+        onReset() {
+            setState({ searchParams: { keyword: '', status: '' } });
+            document.getElementById('searchForm').reset();
+            fetch.list(1);
+        },
+        onDelete(campaignId) {
+            if (!confirm('캠페인을 삭제하시겠습니까?')) return;
+            apiHandler.fetchApiDelete(
+                `/console/v1/api/alimtalk/campaign/${campaignId}`,
+                null,
+                () => {
+                    alertHandler.showInfoAlert('삭제되었습니다.');
+                    fetch.list(state.currentPage);
+                },
+                (message) => alertHandler.showWarnAlert(message)
+            );
+        }
+    };
+
+    // 6. INIT
+    function init() {
+        fetch.list(1);
+    }
+
+    return { handler };
+
+})();
+```
+
+### {pageName}.html (버튼 부분)
+
+```html
+<!-- 검색 영역 -->
+<input type="text" id="keyword" placeholder="캠페인명 검색"
+       onkeypress="if(event.key==='Enter') campaignHandler.handler.onSearch()">
+<select id="status">
+    <option value="">전체</option>
+    <option value="ACTIVE">활성</option>
+    <option value="INACTIVE">비활성</option>
+</select>
+<button onclick="campaignHandler.handler.onSearch()">검색</button>
+<button onclick="campaignHandler.handler.onReset()">초기화</button>
+
+<!-- 목록 -->
+<table>
+    <tbody id="campaignList"></tbody>
+</table>
+
+<!-- 페이징 -->
+<div id="pagingContainer"></div>
+```

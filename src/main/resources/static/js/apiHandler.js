@@ -1,98 +1,133 @@
+function example() {
+    const url = '/api/send';
+    const params = {
+        param1 : 'param1',
+        param2 : 'param2',
+        param3 : 'param3',
+    }
+    apiHandler.fetchApiPost(url, params,
+        (data) => {
+            console.log('성공', data);
+        },
+        (message, data) => {
+            console.log('실패', message, data);
+        }
+    );
+}
+
 const apiHandler = {
-    async fetchApi(method, url, params, success, fail) {
+    /** GET */
+    async fetchApiGet(url, params, successHandler, failHandler) {
+        const requestParam = params && Object.keys(params).length > 0 ? '?' + new URLSearchParams(params).toString() : '';
         try {
-            let options = {
-                method: method,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            };
+            const response = await fetch(url + requestParam, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
 
-            if (method === "GET" && params) {
-                const queryString = new URLSearchParams(params).toString();
-                url += (url.includes("?") ? "&" : "?") + queryString;
-            } else if (params && ["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
-                options.body = JSON.stringify(params);
-            } else {
-                throw new Error();
+            if (!response.ok) {
+                throw new Error(response.status);
             }
 
-            const apiResponse = await fetch(url, options);
+            const responseData = await response.json();
+            this._handleResponse(responseData, successHandler, failHandler);
 
-            if (!apiResponse.ok) {
-                const status = apiResponse.status;
-                let responseData;
-                try {
-                    responseData = await apiResponse.json();
-                } catch {
-                    responseData = { };
-                }
-
-                const message = responseData.message || `HTTP error! status: ${status}`;
-                const data = responseData.data || null;
-
-                switch (status) {
-                    case 400:
-                        fail(message || "잘못된 요청입니다.", data);
-                        break;
-                    case 401:
-                        alert("로그인이 필요합니다.");
-                        window.location.href = "/login";
-                        break;
-                    case 403:
-                        alert("접근 권한이 없습니다.");
-                        break;
-                    case 404:
-                        alert("요청하신 데이터를 찾을 수 없습니다.");
-                        break;
-                    case 500:
-                        alert("서버 내부 오류가 발생했습니다. 관리자에게 문의해주세요.");
-                        throw error;
-                    default:
-                        alert(`오류가 발생했습니다. (HTTP ${status})`);
-                }
-            }
-
-            const responseData = await apiResponse.json();
-
-            let code = responseData['code'];
-            let message = responseData['message'];
-            let data = responseData['data'];
-
-            if (code === 200) {
-                success(data);
-            } else {
-                if (fail) {
-                    fail(message, data);
-                } else {
-                    alert(message || "요청 처리 중 오류가 발생했습니다.");
-                }
-            }
-        } catch (error) {
-            console.log('error: ' + error);
-            alert("데이터 조회 중 오류가 발생했습니다.\n관리자에게 문의해주세요");
+        } catch (err) {
+            this._handleError(err);
         }
     },
-    /** GET 요청 */
-    fetchApiGet(url, params, success, fail) {
-        this.fetchApi("GET", url, params, success, fail);
+
+    /** POST, PUT, PATCH, DELETE */
+    async fetchApi(method, url, params, successHandler, failHandler) {
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params),
+            });
+
+            if (!response.ok) {
+                throw new Error(response.status);
+            }
+
+            const responseData = await response.json();
+            this._handleResponse(responseData, successHandler, failHandler);
+
+        } catch (err) {
+            this._handleError(err);
+        }
     },
+
     /** POST 요청 */
     fetchApiPost(url, params, success, fail) {
-        this.fetchApi("POST", url, params, success, fail);
+        this.fetchApi('POST', url, params, success, fail);
     },
     /** PUT 요청 */
     fetchApiPut(url, params, success, fail) {
-        this.fetchApi("PUT", url, params, success, fail);
+        this.fetchApi('PUT', url, params, success, fail);
     },
     /** PATCH 요청 */
     fetchApiPatch(url, params, success, fail) {
-        this.fetchApi("PATCH", url, params, success, fail);
+        this.fetchApi('PATCH', url, params, success, fail);
     },
     /** DELETE 요청 */
     fetchApiDelete(url, params, success, fail) {
-        this.fetchApi("DELETE", url, params, success, fail);
+        this.fetchApi('DELETE', url, params, success, fail);
     },
+
+    _handleResponse(responseData, successHandler, failHandler) {
+        const { code, message, data } = responseData;
+        if (code === 200) {
+            successHandler(data);
+        } else {
+            failHandler(message, data);
+        }
+    },
+
+    _handleError(err) {
+        const status = Number(err.message);
+        switch (status) {
+            case 400:
+                alert('400 에러 발생');
+                break;
+            case 401:
+                alert('401 에러 발생');
+                break;
+            case 403:
+                alert('403 에러 발생');
+                break;
+            case 404:
+                alert('404 에러 발생');
+                break;
+            case 500:
+                alert('오류가 발생했어요.\n관리자에게 문의해주세요');
+                break;
+            default:
+                break;
+        }
+    },
+}
+
+const pagingHandler = {
+    calculatePageBlockRange(currentPage, totalPage) {
+        const PAGE_SIZE = 5;
+        if (totalPage <= PAGE_SIZE) {
+            return { start: 1, end: totalPage };
+        }
+        // 초반 영역 (1 ~ 3)
+        if (currentPage <= 3) {
+            return { start: 1, end: PAGE_SIZE };
+        }
+        // 끝 영역 (n, n-1, n-2)
+        if (currentPage >= totalPage - 2) {
+            return { start: totalPage - (PAGE_SIZE - 1), end: totalPage };
+        }
+        // 일반 구간 : 현재 페이지를 가운데(3번째)로
+        return { start: currentPage - 2, end: currentPage + 2 };
+    },
+
 }
 
 const paramHandler = {

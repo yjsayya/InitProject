@@ -316,3 +316,11 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,intellij+all,eclipse,visualstudiocode,java,gradle,maven,netbeans
 
 jwt.yml
+
+# Tailwind CLI 실행파일
+tailwindcss
+tailwindcss-macos-arm64
+tailwindcss-macos-x64
+
+# Tailwind input (빌드 결과물인 tailwind.css만 커밋)
+src/main/resources/static/css/tailwind.input.css
