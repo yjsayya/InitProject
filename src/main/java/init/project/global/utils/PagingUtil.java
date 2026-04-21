@@ -1,5 +1,6 @@
 package init.project.global.utils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +26,7 @@ public class PagingUtil {
         int startPageBlock = calStartPageBlock(endPageBlock, PAGE_BLOCK_COUNT);
         // 유효성 검사를 더 늦게 해줘야 함
         endPageBlock = checkEndPageBlockValidation(endPageBlock, totalPageBlockCnt);
-        boolean next = (currentPage != totalPageBlockCnt);
+        boolean next = currentPage < totalPageBlockCnt;
 
         startPageBlock = checkStartPageBlockValidation(startPageBlock);
         boolean prev = (currentPage != 1);
@@ -64,7 +65,7 @@ public class PagingUtil {
         if (totalRowDataCnt == 0) {
             return 1;
         }
-        return (int)(totalRowDataCnt + pageSize - 1) / pageSize;
+        return (int)((totalRowDataCnt + pageSize - 1) / pageSize);
     }
 
     /** currentPage 유효성 검사 */
@@ -118,6 +119,7 @@ public class PagingUtil {
 
     }
 
+    @Getter
     @Setter
     @ToString
     public static class PagingRQ {
@@ -134,9 +136,26 @@ public class PagingUtil {
 
     @Getter
     @Builder
-    public static class PagingRS<T> {
-        private List<T> data;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class PagingRS<T, E> {
+        private List<T> content;
+        private E extra;
         private PagingInfo pageInfo;
+
+        public static <T> PagingRS<T, Void> of(List<T> content, PagingInfo pageInfo) {
+            return PagingRS.<T, Void>builder()
+                    .content(content)
+                    .pageInfo(pageInfo)
+                    .build();
+        }
+
+        public static <T, E> PagingRS<T, E> of(List<T> content, PagingInfo pageInfo, E extra) {
+            return PagingRS.<T, E>builder()
+                    .content(content)
+                    .pageInfo(pageInfo)
+                    .extra(extra)
+                    .build();
+        }
     }
 
 }
