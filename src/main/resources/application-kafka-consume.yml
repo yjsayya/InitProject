@@ -1,0 +1,413 @@
+spring:
+  kafka:
+    consumer:
+      # Spring Boot 공식 단축 속성
+      bootstrap-servers: localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id:
+      client-id: ""
+      auto-offset-reset: latest
+      enable-auto-commit: true
+      auto-commit-interval: 5000
+      max-poll-records: 500
+      fetch-min-size: 1
+      fetch-max-wait: 500
+      isolation-level: read_uncommitted
+      properties:
+        # fetch / 배치 수신
+        fetch.max.bytes: 52428800
+        max.partition.fetch.bytes: 1048576
+        # poll / 처리 시간
+        max.poll.interval.ms: 300000
+        default.api.timeout.ms: 60000
+        # 세션 / 하트비트 (그룹 관리)
+        session.timeout.ms: 45000
+        heartbeat.interval.ms: 3000
+        group.protocol: classic
+        group.instance.id:
+        # 오프셋 / 커밋
+        auto.commit.interval.ms: 5000
+        check.crcs: true
+        # 파티션 할당 전략
+        partition.assignment.strategy: org.apache.kafka.clients.consumer.RangeAssignor
+        # 토픽 / 구독 설정
+        allow.auto.create.topics: true
+        exclude.internal.topics: true
+        # 메타데이터
+        metadata.max.age.ms: 300000
+        # 재연결 / 백오프
+        reconnect.backoff.ms: 50
+        reconnect.backoff.max.ms: 1000
+        retry.backoff.ms: 100
+        retry.backoff.max.ms: 1000
+        # DNS
+        client.dns.lookup: use_all_dns_ips
+        # 소켓 / 네트워크
+        connections.max.idle.ms: 540000
+        send.buffer.bytes: 131072
+        receive.buffer.bytes: 65536
+        socket.connection.setup.timeout.ms: 10000
+        socket.connection.setup.timeout.max.ms: 30000
+        # 보안 (SSL / SASL) - 필요 시 주석 해제
+        # security.protocol: PLAINTEXT
+        # ssl.keystore.location:
+        # ssl.keystore.password:
+        # ssl.key.password:
+        # ssl.truststore.location:
+        # ssl.truststore.password:
+        # ssl.protocol: TLSv1.3
+        # ssl.enabled.protocols: TLSv1.2,TLSv1.3
+        # sasl.mechanism: GSSAPI
+        # sasl.jaas.config:
+
+    # ────────────────────────────────────────────────────────────────
+    # Spring Kafka Listener 설정 (컨테이너 레벨)
+    # ────────────────────────────────────────────────────────────────
+
+    listener:
+      concurrency: 1
+      ack-mode: batch
+      type: single
+      poll-timeout: 3000
+      # batch-error-handler:    # 배치 에러 핸들러 빈 이름
+      # missing-topics-fatal: true
+
+
+# ════════════════════════════════════════════════════════════════════════
+# 설정 설명
+# ════════════════════════════════════════════════════════════════════════
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ Spring Boot 공식 단축 속성                                           │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# bootstrap-servers: localhost:9092
+#   브로커 주소. 콤마로 여러 개 지정 가능
+#   ex) host1:9092,host2:9092,host3:9092
+#   기본값: 없음 (필수)
+#
+# key-deserializer / value-deserializer
+#   메시지 key/value 역직렬화 클래스
+#   StringDeserializer    → 문자열
+#   IntegerDeserializer   → 정수
+#   ByteArrayDeserializer → 바이트
+#   JsonDeserializer      → JSON (spring-kafka 제공)
+#   기본값: 없음 (필수)
+#
+# group-id:
+#   컨슈머 그룹 식별자
+#   같은 group-id 를 가진 컨슈머들이 파티션을 나눠서 처리
+#   기본값: null (필수)
+#
+# client-id: ""
+#   컨슈머 식별자. 브로커 로그/모니터링에서 출처 식별에 사용
+#   concurrency > 1 이면 자동으로 "-n" 접미사 붙음
+#   기본값: "" (빈 문자열)
+#
+# auto-offset-reset: latest
+#   컨슈머 그룹의 오프셋이 없거나 만료됐을 때 시작 위치
+#   latest   → 가장 최신 메시지부터 (기본값)
+#   earliest → 가장 처음 메시지부터
+#   none     → 오프셋 없으면 예외 발생
+#   기본값: latest
+#
+# enable-auto-commit: true
+#   오프셋 자동 커밋 활성화 여부
+#   true  → auto-commit-interval 주기로 자동 커밋
+#   false → 수동 커밋 (commitSync / commitAsync)
+#   운영 환경에서는 false + 수동 커밋 권장
+#   기본값: true
+#
+# auto-commit-interval: 5000
+#   자동 커밋 주기 (ms)
+#   enable-auto-commit: true 일 때만 유효
+#   기본값: 5000 (5초)
+#
+# max-poll-records: 500
+#   poll() 한 번에 가져오는 최대 레코드 개수
+#   높이면 처리량↑, 처리 지연 시 max.poll.interval.ms 초과 위험↑
+#   기본값: 500
+#
+# fetch-min-size: 1
+#   브로커가 응답하기 위한 최소 데이터 크기 (bytes)
+#   이 크기 이상 쌓일 때까지 대기 후 응답 (fetch-max-wait 에 의해 제한)
+#   높이면 처리량↑, latency↑
+#   기본값: 1
+#
+# fetch-max-wait: 500
+#   fetch-min-size 미달 시 브로커 대기 최대 시간 (ms)
+#   이 시간이 지나면 fetch-min-size 미달이어도 즉시 응답
+#   기본값: 500
+#
+# isolation-level: read_uncommitted
+#   트랜잭션 메시지 읽기 수준
+#   read_uncommitted → 커밋 여부 관계없이 모두 읽음 (기본값)
+#   read_committed   → 커밋된 메시지만 읽음 (트랜잭션 프로듀서와 함께 사용)
+#   기본값: read_uncommitted
+#
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ fetch / 배치 수신                                                    │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# fetch.max.bytes: 52428800
+#   단일 fetch 요청에서 브로커가 반환하는 전체 최대 데이터 크기 (bytes)
+#   모든 파티션 합산 기준
+#   기본값: 52428800 (50MB)
+#
+# max.partition.fetch.bytes: 1048576
+#   단일 fetch 요청에서 파티션당 반환 최대 데이터 크기 (bytes)
+#   첫 번째 레코드 배치가 이 크기를 초과해도 진행 보장을 위해 반환됨
+#   기본값: 1048576 (1MB)
+#
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ poll / 처리 시간                                                     │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# max.poll.interval.ms: 300000
+#   poll() 호출 간 최대 허용 시간 (ms)
+#   이 시간 내에 poll() 을 호출하지 않으면 컨슈머가 그룹에서 제외되고 리밸런싱 발생
+#   처리 시간이 긴 경우 이 값을 늘려야 함
+#   기본값: 300000 (5분)
+#
+# default.api.timeout.ms: 60000
+#   timeout 파라미터가 없는 클라이언트 API 호출의 기본 타임아웃 (ms)
+#   기본값: 60000 (1분)
+#
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ 세션 / 하트비트 (그룹 관리)                                          │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# session.timeout.ms: 45000
+#   브로커가 컨슈머 생존을 판단하는 세션 타임아웃 (ms)
+#   이 시간 내에 하트비트 없으면 컨슈머 제외 + 리밸런싱 발생
+#   브로커의 group.min/max.session.timeout.ms 범위 안이어야 함
+#   기본값: 45000 (45초)
+#
+# heartbeat.interval.ms: 3000
+#   브로커로 하트비트를 보내는 주기 (ms)
+#   반드시 session.timeout.ms 의 1/3 이하로 설정 권장
+#   group.protocol=classic 일 때만 유효
+#   기본값: 3000 (3초)
+#
+# group.protocol: classic
+#   컨슈머 그룹 프로토콜
+#   classic  → 기존 방식 (기본값)
+#   consumer → 신규 방식 (Kafka 4.0+, heartbeat.interval.ms 브로커가 제어)
+#   기본값: classic
+#
+# group.instance.id:
+#   컨슈머 인스턴스 고유 ID (Static Membership)
+#   설정 시 재시작해도 같은 파티션 유지 → 불필요한 리밸런싱 방지
+#   기본값: null (Dynamic Member)
+#
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ 오프셋 / 커밋                                                        │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# auto.commit.interval.ms: 5000
+#   자동 커밋 주기 (ms), enable-auto-commit=true 일 때만 유효
+#   기본값: 5000 (5초)
+#
+# check.crcs: true
+#   수신 레코드의 CRC32 무결성 검사 활성화 여부
+#   디스크/네트워크 데이터 손상 감지에 사용
+#   극한의 성능이 필요한 경우 false 로 비활성화 가능
+#   기본값: true
+#
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ 파티션 할당 전략                                                     │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# partition.assignment.strategy: RangeAssignor
+#   파티션을 컨슈머에게 분배하는 전략 (클래스 풀네임으로 입력)
+#
+#   RangeAssignor (기본값)
+#     → 토픽별로 파티션을 범위로 분배
+#     → 같은 키의 메시지가 특정 컨슈머에 몰릴 수 있음
+#
+#   RoundRobinAssignor
+#     → 모든 파티션을 라운드로빈으로 균등 분배
+#     → 처리량 균등화에 유리
+#
+#   StickyAssignor
+#     → 리밸런싱 시 기존 할당 최대한 유지
+#     → 리밸런싱 비용 최소화에 유리
+#
+#   CooperativeStickyAssignor
+#     → StickyAssignor 기반 + 점진적 리밸런싱 지원
+#     → 리밸런싱 중에도 일부 파티션 계속 처리 가능 (권장)
+#
+#   기본값: org.apache.kafka.clients.consumer.RangeAssignor
+#
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ 토픽 / 구독 설정                                                     │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# allow.auto.create.topics: true
+#   subscribe() 시 토픽이 없으면 자동 생성 여부
+#   브로커의 auto.create.topics.enable 도 true 여야 함
+#   운영 환경에서는 false 권장
+#   기본값: true
+#
+# exclude.internal.topics: true
+#   패턴 구독 시 내부 토픽(__consumer_offsets 등) 제외 여부
+#   기본값: true
+#
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ 메타데이터                                                           │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# metadata.max.age.ms: 300000
+#   브로커 메타데이터 강제 갱신 주기 (ms)
+#   파티션 리더 변경 등을 주기적으로 감지
+#   기본값: 300000 (5분)
+#
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ 재연결 / 백오프                                                      │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# reconnect.backoff.ms: 50
+#   브로커 재연결 초기 대기 시간 (ms)
+#   기본값: 50
+#
+# reconnect.backoff.max.ms: 1000
+#   브로커 재연결 최대 대기 시간 (ms)
+#   재연결 시도마다 지수 증가하며 이 값을 상한으로 함
+#   기본값: 1000
+#
+# retry.backoff.ms: 100
+#   실패 후 재시도 전 초기 대기 시간 (ms)
+#   기본값: 100
+#
+# retry.backoff.max.ms: 1000
+#   재시도 최대 대기 시간 (ms)
+#   재시도마다 지수 증가하며 이 값을 상한으로 함
+#   기본값: 1000
+#
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ DNS                                                                  │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# client.dns.lookup: use_all_dns_ips
+#   DNS 조회 방식
+#   use_all_dns_ips                       → 반환된 모든 IP 순차 연결 시도
+#   resolve_canonical_bootstrap_servers_only → 정식 호스트명으로 해석 후 연결
+#   기본값: use_all_dns_ips
+#
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ 소켓 / 네트워크                                                      │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# connections.max.idle.ms: 540000
+#   유휴 커넥션 유지 시간 (ms)
+#   초과 시 커넥션 자동 종료
+#   기본값: 540000 (9분)
+#
+# send.buffer.bytes: 131072
+#   TCP 소켓 전송 버퍼 크기 (bytes), -1 이면 OS 기본값
+#   기본값: 131072 (128KB)
+#
+# receive.buffer.bytes: 65536
+#   TCP 소켓 수신 버퍼 크기 (bytes), -1 이면 OS 기본값
+#   프로듀서(32KB)보다 컨슈머가 큰 이유: 브로커에서 더 많은 데이터를 수신하기 때문
+#   기본값: 65536 (64KB)
+#
+# socket.connection.setup.timeout.ms: 10000
+#   소켓 연결 수립 초기 대기 시간 (ms)
+#   기본값: 10000 (10초)
+#
+# socket.connection.setup.timeout.max.ms: 30000
+#   소켓 연결 수립 최대 대기 시간 (ms)
+#   재연결 시도마다 지수 증가하며 이 값을 상한으로 함
+#   기본값: 30000 (30초)
+#
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ 보안 (SSL / SASL)                                                    │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# security.protocol: PLAINTEXT
+#   브로커 통신 프로토콜
+#   PLAINTEXT      → 암호화 없음 (기본)
+#   SSL            → SSL/TLS 암호화
+#   SASL_PLAINTEXT → SASL 인증 + 암호화 없음
+#   SASL_SSL       → SASL 인증 + SSL/TLS 암호화
+#   기본값: PLAINTEXT
+#
+# ssl.keystore.location / ssl.keystore.password / ssl.key.password
+#   클라이언트 인증서 관련 (양방향 TLS 시 필요)
+#   기본값: null
+#
+# ssl.truststore.location / ssl.truststore.password
+#   브로커 인증서 검증용 truststore
+#   기본값: null
+#
+# ssl.protocol: TLSv1.3
+#   사용할 SSL 프로토콜
+#   기본값: TLSv1.3
+#
+# ssl.enabled.protocols: TLSv1.2,TLSv1.3
+#   허용할 SSL 프로토콜 목록 (콤마 구분)
+#   기본값: TLSv1.2,TLSv1.3
+#
+# sasl.mechanism: GSSAPI
+#   SASL 인증 방식
+#   GSSAPI / PLAIN / SCRAM-SHA-256 / SCRAM-SHA-512 / OAUTHBEARER
+#   기본값: GSSAPI
+#
+# sasl.jaas.config:
+#   JAAS 로그인 모듈 설정 (PLAIN 예시)
+#   org.apache.kafka.common.security.plain.PlainLoginModule required
+#   username="user" password="password";
+#   기본값: null
+#
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ Spring Kafka Listener 설정 (컨테이너 레벨)                           │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# concurrency: 1
+#   KafkaMessageListenerContainer 쓰레드 수
+#   파티션 수와 맞추는 것이 가장 효율적
+#   파티션 수 < concurrency 이면 초과 쓰레드는 유휴 상태
+#   기본값: 1
+#
+# ack-mode: batch
+#   오프셋 커밋 시점 제어
+#   record        → 레코드 1개 처리 후 즉시 커밋
+#   batch         → poll() 로 받은 배치 전체 처리 후 커밋 (기본값)
+#   time          → ackTime 주기로 커밋
+#   count         → ackCount 개수마다 커밋
+#   count_time    → time + count 중 먼저 도달하는 것으로 커밋
+#   manual        → 리스너에서 Acknowledgment.acknowledge() 직접 호출
+#   manual_immediate → 즉시 커밋 (acknowledge() 호출 즉시)
+#   기본값: batch
+#
+# type: single
+#   리스너 타입
+#   single → 레코드 1개씩 @KafkaListener 메서드 호출 (기본값)
+#   batch  → poll() 로 받은 레코드 List 로 한 번에 전달
+#            List<ConsumerRecord> 또는 List<Object> 파라미터 필요
+#   기본값: single
+#
+# poll-timeout: 3000
+#   poll() 호출 시 브로커 응답 대기 시간 (ms)
+#   이 시간 안에 응답 없으면 빈 결과 반환 후 재시도
+#   기본값: 3000 (3초)
+#
+# missing-topics-fatal: true
+#   구독 토픽이 존재하지 않을 때 애플리케이션 기동 실패 여부
+#   true  → 토픽 없으면 기동 실패 (기본값)
+#   false → 토픽 없어도 기동 후 생성 대기
+#   기본값: true
