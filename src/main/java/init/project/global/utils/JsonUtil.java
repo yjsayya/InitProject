@@ -4,12 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.util.Map;
 
 public class JsonUtil {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
     private JsonUtil() {}
 
@@ -41,10 +45,9 @@ public class JsonUtil {
         }
     }
 
-    public static String toPrettyJson(Object obj) {
+    public static String prettyJson(Object obj) {
         try {
-            ObjectWriter writer = objectMapper.writerWithDefaultPrettyPrinter();
-            return writer.writeValueAsString(obj);
+            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to convert Object to Pretty JSON", e);
         }
@@ -55,7 +58,7 @@ public class JsonUtil {
             JsonNode node = objectMapper.readTree(json);
             return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(node);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to format JSON to Pretty JSON", e);
+            throw new RuntimeException("Failed to format JSON string to Pretty JSON", e);
         }
     }
 
