@@ -1,0 +1,41 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+rule_files:
+# - "first_rules.yml"
+# - "second_rules.yml"
+
+scrape_configs:
+  - job_name: "springboot-dev"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["localhost:7110"]
+        labels:
+          service: "api-gateway-dev-01"
+
+      - targets: ["localhost:7111"]
+        labels:
+          service: "api-gateway-dev-02"
+
+      - targets: ["localhost:7910"]
+        labels:
+          service: "msg-transfer-dev-01"
+
+      - targets: ["localhost:7911"]
+        labels:
+          service: "msg-transfer-dev-02"
+
+      - targets: ["localhost:7912"]
+        labels:
+          service: "msg-updater-dev-01"
+
+      - targets: ["localhost:7913"]
+        labels:
+          service: "msg-updater-dev-02"
